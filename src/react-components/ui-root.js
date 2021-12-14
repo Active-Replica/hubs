@@ -9,6 +9,13 @@ import configs from "../utils/configs";
 import { VR_DEVICE_AVAILABILITY } from "../utils/vr-caps-detect";
 import { canShare } from "../utils/share";
 import styles from "../assets/stylesheets/ui-root.scss";
+
+
+// romamile
+import "../activereplica/stage-system.scss";
+// romamilend
+
+
 import styleUtils from "./styles/style-utils.scss";
 import { ReactAudioContext } from "./wrap-with-audio";
 import {
@@ -50,7 +57,8 @@ import { MicSetupModalContainer } from "./room/MicSetupModalContainer";
 import { InvitePopoverContainer } from "./room/InvitePopoverContainer";
 import { MoreMenuPopoverButton, CompactMoreMenuButton, MoreMenuContextProvider } from "./room/MoreMenuPopover";
 import { ChatSidebarContainer, ChatContextProvider, ChatToolbarButtonContainer } from "./room/ChatSidebarContainer";
-import { ContentMenu, PeopleMenuButton, ObjectsMenuButton } from "./room/ContentMenu";
+import { ContentMenu, PeopleMenuButton, ObjectsMenuButton, ChatMenuButton } from "./room/ContentMenu";
+
 import { ReactComponent as CameraIcon } from "./icons/Camera.svg";
 import { ReactComponent as AvatarIcon } from "./icons/Avatar.svg";
 import { ReactComponent as AddIcon } from "./icons/Add.svg";
@@ -1077,7 +1085,8 @@ class UIRoot extends Component {
 
     const canCreateRoom = !configs.feature("disable_room_creation") || configs.isAdmin();
     const canCloseRoom = this.props.hubChannel && !!this.props.hubChannel.canOrWillIfCreator("close_hub");
-    const isModerator = this.props.hubChannel && this.props.hubChannel.canOrWillIfCreator("kick_users") && !isMobileVR;
+    const isModerator = this.props.hubChannel && this.props.hubChannel.canOrWillIfCreator("kick_users") && !isMobileVR;    const isAdmin = window.location.toString().includes("admin");
+
 
     const moreMenu = [
       {
@@ -1102,7 +1111,7 @@ class UIRoot extends Component {
                 icon: EnterIcon,
                 onClick: () => this.showContextualSignInDialog()
               },
-          canCreateRoom && {
+          false && canCreateRoom && {
             id: "create-room",
             label: <FormattedMessage id="more-menu.create-room" defaultMessage="Create Room" />,
             icon: AddIcon,
@@ -1118,7 +1127,7 @@ class UIRoot extends Component {
             icon: AvatarIcon,
             onClick: () => this.setSidebar("profile")
           },
-          {
+          false && {
             id: "favorite-rooms",
             label: <FormattedMessage id="more-menu.favorite-rooms" defaultMessage="Favorite Rooms" />,
             icon: FavoritesIcon,
@@ -1150,7 +1159,7 @@ class UIRoot extends Component {
             icon: HomeIcon,
             onClick: () => this.setSidebar("room-info")
           },
-          (this.props.breakpoint === "sm" || this.props.breakpoint === "md") &&
+          false && (this.props.breakpoint === "sm" || this.props.breakpoint === "md") &&
             (this.props.hub.entry_mode !== "invite" || this.props.hubChannel.can("update_hub")) && {
               id: "invite",
               label: <FormattedMessage id="more-menu.invite" defaultMessage="Invite" />,
@@ -1158,13 +1167,13 @@ class UIRoot extends Component {
               onClick: () => this.props.scene.emit("action_invite")
             },
           this.isFavorited()
-            ? {
+            ? false && {
                 id: "unfavorite-room",
                 label: <FormattedMessage id="more-menu.unfavorite-room" defaultMessage="Unfavorite Room" />,
                 icon: StarIcon,
                 onClick: () => this.toggleFavorited()
               }
-            : {
+            : false && {
                 id: "favorite-room",
                 label: <FormattedMessage id="more-menu.favorite-room" defaultMessage="Favorite Room" />,
                 icon: StarOutlineIcon,
@@ -1181,7 +1190,7 @@ class UIRoot extends Component {
               icon: CameraIcon,
               onClick: () => this.toggleStreamerMode()
             },
-          (this.props.breakpoint === "sm" || this.props.breakpoint === "md") &&
+          false && (this.props.breakpoint === "sm" || this.props.breakpoint === "md") &&
             entered && {
               id: "leave-room",
               label: <FormattedMessage id="more-menu.enter-leave-room" defaultMessage="Leave Room" />,
@@ -1193,7 +1202,7 @@ class UIRoot extends Component {
                 });
               }
             },
-          canCloseRoom && {
+          false && canCloseRoom && {
             id: "close-room",
             label: <FormattedMessage id="more-menu.close-room" defaultMessage="Close Room" />,
             icon: DeleteIcon,
@@ -1229,7 +1238,7 @@ class UIRoot extends Component {
             icon: WarningCircleIcon,
             href: configs.link("issue_report", "https://hubs.mozilla.com/docs/help.html")
           },
-          entered && {
+          false && entered && {
             id: "start-tour",
             label: <FormattedMessage id="more-menu.start-tour" defaultMessage="Start Tour" />,
             icon: SupportIcon,
@@ -1269,10 +1278,55 @@ class UIRoot extends Component {
       }
     ];
 
+		// romamile
+			const cueUI = window.stgSys.renderCueUI();
+
+	
+	  // romamilend
+
     return (
       <MoreMenuContextProvider>
         <ReactAudioContext.Provider value={this.state.audioContext}>
           <div className={classNames(rootStyles)}>
+
+              <div className="topLeftMenu">
+                {entered && (
+                  <>
+                   <MoreMenuPopoverButton style={{marginLeft: "10px"}} menu={moreMenu} />
+                    <VoiceButtonContainer
+                      scene={this.props.scene}
+                      microphoneEnabled={this.mediaDevicesManager.isMicShared}
+                    />
+                    <SharePopoverContainer scene={this.props.scene} hubChannel={this.props.hubChannel} />
+                    <PlacePopoverContainer
+                      scene={this.props.scene}
+                      hubChannel={this.props.hubChannel}
+                      mediaSearchStore={this.props.mediaSearchStore}
+                      showNonHistoriedDialog={this.showNonHistoriedDialog}
+                    />
+                    {this.props.hubChannel.can("spawn_emoji") && <ReactionPopoverContainer />}
+                                       {false && (     <img
+                                   className="nonDragSel iconTopLeftMenu"
+                                                   src= "../private_hubs_assets/assets/help.svg"
+                                               onClick={() => window.handleRPM()}
+                                               />
+                                       )}
+                  </>
+                )}
+                {entered && isMobileVR && (
+                    <ToolbarButton
+                      className={styleUtils.hideLg}
+                      icon={<VRIcon />}
+                      preset="accept"
+                      label={<FormattedMessage id="toolbar.enter-vr-button" defaultMessage="Enter VR" />}
+                      onClick={() => exit2DInterstitialAndEnterVR(true)}
+                    />
+                )}
+              </div>
+
+
+
+
             {preload &&
               this.props.hub && (
                 <PreloadOverlay
@@ -1343,11 +1397,11 @@ class UIRoot extends Component {
                 viewport={
                   <>
                     {!this.state.dialog && renderEntryFlow ? entryDialog : undefined}
-                    {!this.props.selectedObject && <CompactMoreMenuButton />}
+                    {false && !this.props.selectedObject && <CompactMoreMenuButton />}
                     {(!this.props.selectedObject ||
                       (this.props.breakpoint !== "sm" && this.props.breakpoint !== "md")) && (
                       <ContentMenu>
-                        {showObjectList && (
+                        {isAdmin && showObjectList && (
                           <ObjectsMenuButton
                             active={this.state.sidebarId === "objects"}
                             onClick={() => this.toggleSidebar("objects")}
@@ -1357,6 +1411,10 @@ class UIRoot extends Component {
                           active={this.state.sidebarId === "people"}
                           onClick={() => this.toggleSidebar("people")}
                           presenceCount={this.state.presenceCount}
+                        />
+                        <ChatMenuButton
+                          active={this.state.sidebarId === "chat"}
+                          onClick={() => this.toggleSidebar("chat")}
                         />
                       </ContentMenu>
                     )}
@@ -1501,11 +1559,23 @@ class UIRoot extends Component {
                 }
                 modal={this.state.dialog}
                 toolbarLeft={
-                  <InvitePopoverContainer
-                    hub={this.props.hub}
-                    hubChannel={this.props.hubChannel}
-                    scene={this.props.scene}
-                  />
+                  <>
+                    {entered && (
+                      <>
+                      </>
+                    )}
+                    {entered &&
+                      isMobileVR && (
+                        <ToolbarButton
+                          className={styleUtils.hideLg}
+                          icon={<VRIcon />}
+                          preset="accept"
+                          label={<FormattedMessage id="toolbar.enter-vr-button" defaultMessage="Enter VR" />}
+                          onClick={() => exit2DInterstitialAndEnterVR(true)}
+                        />
+                      )}
+                    </>
+
                 }
                 toolbarCenter={
                   <>
@@ -1529,33 +1599,6 @@ class UIRoot extends Component {
                         )}
                       </>
                     )}
-                    {entered && (
-                      <>
-                        <VoiceButtonContainer
-                          scene={this.props.scene}
-                          microphoneEnabled={this.mediaDevicesManager.isMicShared}
-                        />
-                        <SharePopoverContainer scene={this.props.scene} hubChannel={this.props.hubChannel} />
-                        <PlacePopoverContainer
-                          scene={this.props.scene}
-                          hubChannel={this.props.hubChannel}
-                          mediaSearchStore={this.props.mediaSearchStore}
-                          showNonHistoriedDialog={this.showNonHistoriedDialog}
-                        />
-                        {this.props.hubChannel.can("spawn_emoji") && <ReactionPopoverContainer />}
-                      </>
-                    )}
-                    <ChatToolbarButtonContainer onClick={() => this.toggleSidebar("chat")} />
-                    {entered &&
-                      isMobileVR && (
-                        <ToolbarButton
-                          className={styleUtils.hideLg}
-                          icon={<VRIcon />}
-                          preset="accept"
-                          label={<FormattedMessage id="toolbar.enter-vr-button" defaultMessage="Enter VR" />}
-                          onClick={() => exit2DInterstitialAndEnterVR(true)}
-                        />
-                      )}
                   </>
                 }
                 toolbarRight={
@@ -1569,26 +1612,13 @@ class UIRoot extends Component {
                           onClick={() => exit2DInterstitialAndEnterVR(true)}
                         />
                       )}
-                    {entered && (
-                      <ToolbarButton
-                        icon={<LeaveIcon />}
-                        label={<FormattedMessage id="toolbar.leave-room-button" defaultMessage="Leave" />}
-                        preset="cancel"
-                        onClick={() => {
-                          this.showNonHistoriedDialog(LeaveRoomModal, {
-                            destinationUrl: "/",
-                            reason: LeaveReason.leaveRoom
-                          });
-                        }}
-                      />
-                    )}
-                    <MoreMenuPopoverButton menu={moreMenu} />
                   </>
                 }
               />
             )}
           </div>
         </ReactAudioContext.Provider>
+        {cueUI}
       </MoreMenuContextProvider>
     );
   }

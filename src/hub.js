@@ -224,6 +224,15 @@ import { OAuthScreenContainer } from "./react-components/auth/OAuthScreenContain
 import { SignInMessages } from "./react-components/auth/SignInModal";
 import { ThemeProvider } from "./react-components/styles/theme";
 
+
+//romamile
+    // Import of the private_hubs_assets javascript files (intended as javascript classes) 
+import stgSysClass from "./private_hubs_assets/stage-system.js";
+import testPersonalCodeClass from "./private_hubs_assets/testPersonalcode.js";
+
+//romamilend
+
+
 const PHOENIX_RELIABLE_NAF = "phx-reliable";
 NAF.options.firstSyncSource = PHOENIX_RELIABLE_NAF;
 NAF.options.syncSource = PHOENIX_RELIABLE_NAF;
@@ -1550,4 +1559,26 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   authChannel.setSocket(socket);
   linkChannel.setSocket(socket);
+
+
+			// romamile
+    // Instantiation of the class in a global variable allocated to the window object
+       window.stgSys = new stgSysClass();
+       window.testPersonalCode = new testPersonalCodeClass();
+
+    // Initialisation of the class 
+       window.stgSys.init();
+       setInterval(() => window.stgSys.regCheck(), 1000);
+
+    // User handling
+       if(qs.has("k"))
+    stgSys.initUser( qs.get("k") );
+       else
+    console.log(stgSys.myUser);
+
+
+  store.update({ preferences: { locale:"en" } });
+
+       // romamilend
+
 });

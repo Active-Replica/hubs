@@ -45,6 +45,17 @@ PeopleMenuButton.propTypes = {
   presenceCount: PropTypes.number
 };
 
+export function ChatMenuButton(props) {
+  return (
+    <ContentMenuButton {...props}>
+      <ChatIcon />
+      <span>
+        <FormattedMessage id="content-menu.chat-menu-button" defaultMessage="Chat" />
+      </span>
+    </ContentMenuButton>
+  );
+}
+
 export function ContentMenu({ children }) {
   return <div className={styles.contentMenu}>{joinChildren(children, () => <div className={styles.separator} />)}</div>;
 }
