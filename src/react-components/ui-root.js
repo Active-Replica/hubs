@@ -12,7 +12,7 @@ import styles from "../assets/stylesheets/ui-root.scss";
 
 
 // romamile
-import "../activereplica/stage-system.scss";
+import "../private_hubs_assets/stage-system.scss";
 // romamilend
 
 
