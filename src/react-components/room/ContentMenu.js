@@ -5,6 +5,7 @@ import { joinChildren } from "../misc/joinChildren";
 import styles from "./ContentMenu.scss";
 import { ReactComponent as ObjectsIcon } from "../icons/Objects.svg";
 import { ReactComponent as PeopleIcon } from "../icons/People.svg";
+import { ReactComponent as ChatIcon } from "../icons/Chat.svg";
 import { FormattedMessage } from "react-intl";
 
 export function ContentMenuButton({ active, children, ...props }) {
