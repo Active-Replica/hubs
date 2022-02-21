@@ -30,8 +30,10 @@ export const defaultMaterialQualitySetting = (function() {
   if (qsDefault && MATERIAL_QUALITY_OPTIONS.indexOf(qsDefault) !== -1) {
     return qsDefault;
   }
-
-  return "high";
+  //mikemorran
+  //return "high";
+  return "medium";
+  //mikemorranend
 })();
 
 // Durable (via local-storage) schema-enforced state that is meant to be consumed via forward data flow.
