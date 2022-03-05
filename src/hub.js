@@ -262,6 +262,33 @@ import { LogMessageType } from "./react-components/room/ChatSidebar";
 import stgSysClass from "./private_hubs_assets/stage-system.js";
 import testPersonalCodeClass from "./private_hubs_assets/testPersonalcode.js";
 
+// needed to happen before the UI is loaded
+fetch(proxiedUrlFor("https://chat-hubs.glitch.me/db"))
+  .then(function (response) {
+    return response.json();
+  })
+  .then((data) => {
+    window.isRoomOpen = true;
+    window.isChatOpen = true;
+
+    let myUrl = new URL( window.location )
+    let mySublink = myUrl.pathname.split("/")[1];
+    //console.log(data.listRoom);
+
+    for(let eltRoom of data.listRoom) {
+      //console.log(eltRoom);
+      if(eltRoom.sublink == mySublink) {
+        //console.log("found!")
+        console.log(eltRoom);
+        //window.isRoomOpen = eltRoom.isRoomOpen === "true";
+        //window.isChatOpen = eltRoom.isChatOpen === "true";
+        window.isRoomOpen = eltRoom.isRoomOpen;
+        window.isChatOpen = eltRoom.isChatOpen;
+        //if(!window.isChatOpen)
+        //  document.getElementById("chatMenuButton").style.display = "none"
+      }
+    }
+  });
 //romamilend
 
 
@@ -1427,7 +1454,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.log(stgSys.myUser);
 
 
-  store.update({ preferences: { locale:"en" } });
+    store.update({ preferences: { locale:"en" } });
+
+
+
+
 
        // romamilend
 

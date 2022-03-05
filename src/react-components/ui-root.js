@@ -12,6 +12,7 @@ import styles from "../assets/stylesheets/ui-root.scss";
 
 
 // romamile
+import { proxiedUrlFor } from "../utils/media-url-utils";
 import "../private_hubs_assets/stage-system.scss";
 // romamilend
 
@@ -216,6 +217,40 @@ class UIRoot extends Component {
     // An exit handler that discards event arguments and can be cleaned up.
     this.exitEventHandler = () => this.props.exitScene();
     this.mediaDevicesManager = window.APP.mediaDevicesManager;
+
+    setInterval(() => {
+			fetch(proxiedUrlFor("https://chat-hubs.glitch.me/db"))
+				.then(function (response) {
+					return response.json();
+				})
+				.then((data) => {
+
+					let myUrl = new URL( window.location )
+					let mySublink = myUrl.pathname.split("/")[1];
+
+					for(let eltRoom of data.listRoom) {
+						if(eltRoom.sublink == mySublink) {
+
+							if(window.isChatOpen != eltRoom.isChatOpen) {
+								window.isChatOpen = eltRoom.isChatOpen;
+                if(!window.isChatOpen)
+								  document.getElementById("chatMenuButton").style.display = "none";
+                if(!window.isChatOpen && this.state.sidebarId === "chat")
+                  this.setSidebar("")
+							}
+
+							if(window.isRoomOpen != eltRoom.isRoomOpen) {
+								window.isRoomOpen = eltRoom.isRoomOpen;
+								if(!window.isRoomOpen) {
+									location.reload();
+								}
+							}
+							
+						}
+					}
+				})
+		}, 1000);
+
   }
 
   componentDidUpdate(prevProps) {
@@ -1304,7 +1339,7 @@ class UIRoot extends Component {
 
 		// romamile
 			const cueUI = window.stgSys.renderCueUI();
-
+      const isChatOpen = window.isChatOpen
 	
 	  // romamilend
 
@@ -1436,10 +1471,13 @@ class UIRoot extends Component {
                           onClick={() => this.toggleSidebar("people")}
                           presencecount={this.state.presenceCount}
                         />
+                        {isChatOpen && (
                         <ChatMenuButton
+                          id="chatMenuButton"
                           active={this.state.sidebarId === "chat"}
                           onClick={() => this.toggleSidebar("chat")}
                         />
+                        )}
                       </ContentMenu>
                     )}
                     {!entered && !streaming && !isMobile && streamerName && <SpectatingLabel name={streamerName} />}
@@ -1495,6 +1533,7 @@ class UIRoot extends Component {
                     <>
                       {this.state.sidebarId === "chat" && (
                         <ChatSidebarContainer
+                          id="chatSideBarContainer_id"
                           presences={this.props.presences}
                           occupantCount={this.occupantCount()}
                           canSpawnMessages={entered && this.props.hubChannel.can("spawn_and_move_media")}

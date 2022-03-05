@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+
 import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import styles from "./RoomSettingsSidebar.scss";
@@ -31,6 +32,7 @@ export function RoomSettingsSidebar({
   canChangeScene,
   onChangeScene
 }) {
+
   const intl = useIntl();
   const { handleSubmit, register, watch, errors, setValue } = useForm({
     defaultValues: room
@@ -39,14 +41,61 @@ export function RoomSettingsSidebar({
   const entryMode = watch("entry_mode");
   const spawnAndMoveMedia = watch("member_permissions.spawn_and_move_media");
 
+  const onChangeToggleRoom = ( elt ) => {
+		window.isRoomOpen = elt.target.checked;
+
+	  
+		document.getElementById("textInputFieldRoomSize").value = window.isRoomOpen ? "24" : "0";
+	}
+
+  const onChangeToggleChat = ( elt ) => {
+		
+		//console.log(elt.target)
+		//console.log(elt.target.checked)
+		
+		window.isChatOpen = elt.target.checked;
+		//window.isChatOpen = !window.isChatOpen;
+
+    //document.getElementById("toggleInputBlockChat").checked = window.isChatOpen;
+		//console.log(typeof window.isChatOpen);
+    //console.log(document.getElementById("toggleInputBlockChat").checked);
+		//setValue({});
+		
+		//document.getElementById("toggleInputBlockChat").checked
+		const data = new URLSearchParams();
+
+		let myUrl = new URL( window.location )
+		data.append("sublink", myUrl.pathname.split("/")[1]);
+		data.append("name", myUrl.pathname.split("/")[2]);
+    data.append("isChatOpen", window.isChatOpen);
+
+		fetch("https://chat-hubs.glitch.me/updateroom", {
+    	method: 'post',
+    	body: data,
+		})
+		.catch((error) => {
+			console.error('Error:', error);
+		});
+
+	}
+
   useEffect(
     () => {
+
+			if(document.getElementById("textInputFieldRoomSize").value != "0")
+				window.isRoomOpen = true
+			else 
+				window.isRoomOpen = false;
+				
+  		document.getElementById("toggleInputBlockChat").checked = window.isChatOpen;
+  		document.getElementById("toggleInputBlockRoom").checked = window.isRoomOpen;
+
       if (!spawnAndMoveMedia) {
         setValue("member_permissions.spawn_camera", false, { shouldDirty: true });
         setValue("member_permissions.pin_objects", false, { shouldDirty: true });
       }
-    },
-    [spawnAndMoveMedia, setValue]
+    }
+//		,[spawnAndMoveMedia, setValue]
   );
 
   return (
@@ -91,6 +140,7 @@ export function RoomSettingsSidebar({
           fullWidth
         />
         <NumericInputField
+					id="textInputFieldRoomSize"
           name="room_size"
           required
           min={0}
@@ -195,10 +245,21 @@ export function RoomSettingsSidebar({
               label={<FormattedMessage id="room-settings-sidebar.fly" defaultMessage="Allow flying" />}
               ref={register}
             />
+            <ToggleInput
+							id="toggleInputBlockRoom"
+              label={<FormattedMessage id="room-settings-sidebar.allow-entering" defaultMessage="Allow entering" />}
+            	onChange={onChangeToggleRoom}
+            />
+						<ToggleInput
+							id="toggleInputBlockChat"
+							label={<FormattedMessage id="block-chat" defaultMessage="Allow chat" />}
+							onChange={onChangeToggleChat}
+						/>
           </div>
         </InputField>
         <ApplyButton type="submit" />
       </Column>
+			<br/>
     </Sidebar>
   );
 }
