@@ -43,9 +43,22 @@ export function RoomSettingsSidebar({
 
   const onChangeToggleRoom = ( elt ) => {
 		window.isRoomOpen = elt.target.checked;
-
-	  
 		document.getElementById("textInputFieldRoomSize").value = window.isRoomOpen ? "24" : "0";
+
+		const data = new URLSearchParams();
+
+		let myUrl = new URL( window.location )
+		data.append("sublink", myUrl.pathname.split("/")[1]);
+		data.append("name", myUrl.pathname.split("/")[2]);
+    data.append("isRoomOpen", window.isRoomOpen);
+
+		fetch("https://chat-hubs.glitch.me/updateroom", {
+    	method: 'post',
+    	body: data,
+		})
+		.catch((error) => {
+			console.error('Error:', error);
+		});
 	}
 
   const onChangeToggleChat = ( elt ) => {
