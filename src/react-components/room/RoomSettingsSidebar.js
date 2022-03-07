@@ -48,8 +48,13 @@ export function RoomSettingsSidebar({
 		const data = new URLSearchParams();
 
 		let myUrl = new URL( window.location )
-		data.append("sublink", myUrl.pathname.split("/")[1]);
-		data.append("name", myUrl.pathname.split("/")[2]);
+    if(myUrl.pathname === "/") {
+		  data.append("sublink", "/");
+		  data.append("name", "main");
+    } else {
+		  data.append("sublink", myUrl.pathname.split("/")[1]);
+		  data.append("name", myUrl.pathname.split("/")[2]);
+    }
     data.append("isRoomOpen", window.isRoomOpen);
 
 		fetch("https://chat-hubs.glitch.me/updateroom", {
@@ -63,23 +68,18 @@ export function RoomSettingsSidebar({
 
   const onChangeToggleChat = ( elt ) => {
 		
-		//console.log(elt.target)
-		//console.log(elt.target.checked)
-		
 		window.isChatOpen = elt.target.checked;
-		//window.isChatOpen = !window.isChatOpen;
 
-    //document.getElementById("toggleInputBlockChat").checked = window.isChatOpen;
-		//console.log(typeof window.isChatOpen);
-    //console.log(document.getElementById("toggleInputBlockChat").checked);
-		//setValue({});
-		
-		//document.getElementById("toggleInputBlockChat").checked
 		const data = new URLSearchParams();
 
 		let myUrl = new URL( window.location )
-		data.append("sublink", myUrl.pathname.split("/")[1]);
-		data.append("name", myUrl.pathname.split("/")[2]);
+    if(myUrl.pathname === "/") {
+		  data.append("sublink", "/");
+		  data.append("name", "main");
+    } else {
+		  data.append("sublink", myUrl.pathname.split("/")[1]);
+		  data.append("name", myUrl.pathname.split("/")[2]);
+    }
     data.append("isChatOpen", window.isChatOpen);
 
 		fetch("https://chat-hubs.glitch.me/updateroom", {

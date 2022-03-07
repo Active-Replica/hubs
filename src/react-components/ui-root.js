@@ -226,15 +226,17 @@ class UIRoot extends Component {
 				.then((data) => {
 
 					let myUrl = new URL( window.location )
-					let mySublink = myUrl.pathname.split("/")[1];
+					let mySublink = "/";
+          if(myUrl.pathname !== "/") {
+					  mySublink = myUrl.pathname.split("/")[1];
+          }
 
 					for(let eltRoom of data.listRoom) {
 						if(eltRoom.sublink == mySublink) {
 
 							if(window.isChatOpen != eltRoom.isChatOpen) {
 								window.isChatOpen = eltRoom.isChatOpen;
-                if(!window.isChatOpen)
-								  document.getElementById("chatMenuButton").style.display = "none";
+								document.getElementById("chatMenuButton").style.display = window.isChatOpen ? "block" : "none";
                 if(!window.isChatOpen && this.state.sidebarId === "chat")
                   this.setSidebar("")
 							}
