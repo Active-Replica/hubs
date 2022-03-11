@@ -27,7 +27,7 @@ const messages = defineMessages({
   },
   [ExitReason.denied]: {
     id: "exited-room-screen.reason.denied",
-    defaultMessage: "You are not permitted to join this room. Please request permission from the room creator."
+    defaultMessage: "This session is at capacity. Please see the event page to access overflow rooms."
   },
   [ExitReason.disconnected]: {
     id: "exited-room-screen.reason.disconnected",
