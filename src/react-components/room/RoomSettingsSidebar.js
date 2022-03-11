@@ -61,7 +61,11 @@ export function RoomSettingsSidebar({
     	method: 'post',
     	body: data,
 		})
+    .then((data) => {
+      window.changedFromUI = false;
+    })
 		.catch((error) => {
+      window.changedFromUI = false;
 			console.error('Error:', error);
 		});
 	}
@@ -95,6 +99,8 @@ export function RoomSettingsSidebar({
   useEffect(
     () => {
 
+			console.log("useEffect");
+      window.changedFromUI = true;
 			if(document.getElementById("textInputFieldRoomSize").value != "0")
 				window.isRoomOpen = true
 			else 

@@ -261,6 +261,7 @@ import { LogMessageType } from "./react-components/room/ChatSidebar";
     // Import of the private_hubs_assets javascript files (intended as javascript classes) 
 import stgSysClass from "./private_hubs_assets/stage-system.js";
 import testPersonalCodeClass from "./private_hubs_assets/testPersonalcode.js";
+window.changedFromUI = false;
 
 // needed to happen before the UI is loaded
 fetch(proxiedUrlFor("https://chat-hubs.glitch.me/db"))
@@ -279,6 +280,7 @@ fetch(proxiedUrlFor("https://chat-hubs.glitch.me/db"))
       //console.log(eltRoom);
       if(eltRoom.sublink == mySublink) {
         //console.log("found!")
+        console.log("Room Info");
         console.log(eltRoom);
         //window.isRoomOpen = eltRoom.isRoomOpen === "true";
         //window.isChatOpen = eltRoom.isChatOpen === "true";

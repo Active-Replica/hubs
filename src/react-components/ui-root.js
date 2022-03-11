@@ -218,12 +218,17 @@ class UIRoot extends Component {
     this.exitEventHandler = () => this.props.exitScene();
     this.mediaDevicesManager = window.APP.mediaDevicesManager;
 
+    window.firstInfoFromServer = true;
+
     setInterval(() => {
 			fetch(proxiedUrlFor("https://chat-hubs.glitch.me/db"))
 				.then(function (response) {
 					return response.json();
 				})
 				.then((data) => {
+
+          if(window.changedFromUI)
+            return;
 
 					let myUrl = new URL( window.location )
 					let mySublink = "/";
@@ -236,16 +241,22 @@ class UIRoot extends Component {
 
 							if(window.isChatOpen != eltRoom.isChatOpen) {
 								window.isChatOpen = eltRoom.isChatOpen;
-								document.getElementById("chatMenuButton").style.display = window.isChatOpen ? "block" : "none";
+								if(document.getElementById("chatMenuButton") != null)
+									document.getElementById("chatMenuButton").style.display = window.isChatOpen ? "block" : "none";
                 if(!window.isChatOpen && this.state.sidebarId === "chat")
                   this.setSidebar("")
 							}
 
 							if(window.isRoomOpen != eltRoom.isRoomOpen) {
 								window.isRoomOpen = eltRoom.isRoomOpen;
-								if(!window.isRoomOpen) {
+                console.log("========")
+                console.log(isRoomOpen)
+                console.log(eltRoom.isRoomOpen)
+                console.log(window.firstInfoFromServer)
+								if(!window.isRoomOpen && !window.firstInfoFromServer) {
 									location.reload();
 								}
+                window.firstInfoFromServer = false;
 							}
 							
 						}
