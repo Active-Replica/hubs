@@ -148,6 +148,7 @@ import "./components/avatar-inspect-collider";
 import "./components/video-texture-target";
 //activereplica
 import "./components/mirror";
+import "./components/proximity-scale";
 //activereplicaend
 
 import ReactDOM from "react-dom";

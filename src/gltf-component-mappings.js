@@ -620,4 +620,5 @@ AFRAME.GLTFModelPlus.registerComponent(
 
 //activereplica
 AFRAME.GLTFModelPlus.registerComponent("mirror", "mirror");
+AFRAME.GLTFModelPlus.registerComponent("proximity-scale", "proximity-scale");
 //activereplicaend
