@@ -256,29 +256,28 @@ import { SignInMessages } from "./react-components/auth/SignInModal";
 import { ThemeProvider } from "./react-components/styles/theme";
 import { LogMessageType } from "./react-components/room/ChatSidebar";
 
-
 //romamile
-    // Import of the private_hubs_assets javascript files (intended as javascript classes) 
+// Import of the private_hubs_assets javascript files (intended as javascript classes)
 import stgSysClass from "./private_hubs_assets/stage-system.js";
 import testPersonalCodeClass from "./private_hubs_assets/testPersonalcode.js";
 window.changedFromUI = false;
 
 // needed to happen before the UI is loaded
 fetch(proxiedUrlFor("https://chat-hubs.glitch.me/db"))
-  .then(function (response) {
+  .then(function(response) {
     return response.json();
   })
-  .then((data) => {
+  .then(data => {
     window.isRoomOpen = true;
     window.isChatOpen = true;
 
-    let myUrl = new URL( window.location )
+    let myUrl = new URL(window.location);
     let mySublink = myUrl.pathname.split("/")[1];
     //console.log(data.listRoom);
 
-    for(let eltRoom of data.listRoom) {
+    for (let eltRoom of data.listRoom) {
       //console.log(eltRoom);
-      if(eltRoom.sublink == mySublink) {
+      if (eltRoom.sublink == mySublink) {
         //console.log("found!")
         console.log("Room Info");
         console.log(eltRoom);
@@ -292,7 +291,6 @@ fetch(proxiedUrlFor("https://chat-hubs.glitch.me/db"))
     }
   });
 //romamilend
-
 
 const PHOENIX_RELIABLE_NAF = "phx-reliable";
 NAF.options.firstSyncSource = PHOENIX_RELIABLE_NAF;
@@ -1439,29 +1437,20 @@ document.addEventListener("DOMContentLoaded", async () => {
   authChannel.setSocket(socket);
   linkChannel.setSocket(socket);
 
+  // romamile
+  // Instantiation of the class in a global variable allocated to the window object
+  window.stgSys = new stgSysClass();
+  window.testPersonalCode = new testPersonalCodeClass();
 
-			// romamile
-    // Instantiation of the class in a global variable allocated to the window object
-       window.stgSys = new stgSysClass();
-       window.testPersonalCode = new testPersonalCodeClass();
+  // Initialisation of the class
+  window.stgSys.init();
+  setInterval(() => window.stgSys.regCheck(), 1000);
 
-    // Initialisation of the class 
-       window.stgSys.init();
-       setInterval(() => window.stgSys.regCheck(), 1000);
+  // User handling
+  if (qs.has("k")) stgSys.initUser(qs.get("k"));
+  else console.log(stgSys.myUser);
 
-    // User handling
-       if(qs.has("k"))
-    stgSys.initUser( qs.get("k") );
-       else
-    console.log(stgSys.myUser);
+  store.update({ preferences: { locale: "en" } });
 
-
-    store.update({ preferences: { locale:"en" } });
-
-
-
-
-
-       // romamilend
-
+  // romamilend
 });
