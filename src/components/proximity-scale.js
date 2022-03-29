@@ -50,7 +50,6 @@ AFRAME.registerComponent("proximity-scale", {
     this.time += dt;
     if (this.anim && !this.anim.completed) {
       //console.log("anim in progress");
-      this.anim.tick(this.time);
       return;
     }
     var dist = comparePosition(this.el.object3D.position);
