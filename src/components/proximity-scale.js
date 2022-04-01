@@ -49,21 +49,21 @@ AFRAME.registerComponent("proximity-scale", {
   tick(t, dt) {
     this.time += dt;
     if (this.anim && !this.anim.completed) {
-      console.log("anim in progress");
+      //console.log("anim in progress");
       this.anim.tick(this.time);
       return;
     }
     var dist = comparePosition(this.el.object3D.position);
     if (this.data.hasMaxed) {
       if (dist > this.data.exitDist) {
-        console.log("max size and outside of exit distance");
+        //console.log("max size and outside of exit distance");
         this.scaleElement(this.data.minScale, this.el);
         this.data.animStarted = true;
         this.data.hasMaxed = false;
       }
     } else {
       if (dist < this.data.enterDist) {
-        console.log("min size and inside of enter distance");
+        //console.log("min size and inside of enter distance");
         this.scaleElement(this.data.maxScale, this.el);
         this.data.animStarted = true;
         this.data.hasMaxed = true;
