@@ -80,6 +80,9 @@ AFRAME.GLTFModelPlus.registerComponent("shadow", "shadow");
 AFRAME.GLTFModelPlus.registerComponent("water", "water");
 AFRAME.GLTFModelPlus.registerComponent("scale-audio-feedback", "scale-audio-feedback");
 AFRAME.GLTFModelPlus.registerComponent("morph-audio-feedback", "morph-audio-feedback");
+//mike
+
+//mikend
 AFRAME.GLTFModelPlus.registerComponent("animation-mixer", "animation-mixer");
 AFRAME.GLTFModelPlus.registerComponent("loop-animation", "loop-animation");
 AFRAME.GLTFModelPlus.registerComponent("uv-scroll", "uv-scroll");
@@ -621,4 +624,5 @@ AFRAME.GLTFModelPlus.registerComponent(
 //activereplica
 AFRAME.GLTFModelPlus.registerComponent("mirror", "mirror");
 AFRAME.GLTFModelPlus.registerComponent("proximity-scale", "proximity-scale");
+AFRAME.GLTFModelPlus.registerComponent("proximity-blend", "proximity-blend");
 //activereplicaend

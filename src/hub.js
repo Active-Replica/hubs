@@ -149,6 +149,7 @@ import "./components/video-texture-target";
 //activereplica
 import "./components/mirror";
 import "./components/proximity-scale";
+import "./components/proximity-blend";
 //activereplicaend
 
 import ReactDOM from "react-dom";
