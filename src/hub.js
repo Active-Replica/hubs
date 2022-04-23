@@ -1454,7 +1454,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (qs.has("k")) stgSys.initUser(qs.get("k"));
   else console.log(stgSys.myUser);
 
-  store.update({ preferences: { locale: "en" } });
+  store.update({ preferences: { locale: "fr" } });
 
   // romamilend
 });
