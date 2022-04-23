@@ -1,10 +1,10 @@
-import { easeOutQuadratic } from "../utils/easing";
-
 AFRAME.registerComponent("proximity-blend", {
   schema: {
-    name: { default: "mouthOpen" },
+    name: { default: "Shieldsup" },
     minValue: { default: 0 },
     maxValue: { default: 2 },
+    minDist: { default: 0 },
+    maxDist: { default: 10 },
     reverse: { default: false }
   },
 
@@ -16,11 +16,15 @@ AFRAME.registerComponent("proximity-blend", {
     } else if (this.el.object3DMap.group) {
       // skinned mesh with multiple materials
       this.el.object3DMap.group.traverse(o => o.isSkinnedMesh && meshes.push(o));
+    } else if (this.el.object3DMap.mesh) {
+      console.log("no skinned mesh");
+      meshes.push(this.el.object3DMap.mesh);
     }
     if (meshes.length) {
       this.morphs = meshes
         .map(mesh => ({ mesh, morphNumber: mesh.morphTargetDictionary[this.data.name] }))
         .filter(m => m.morphNumber !== undefined);
+      console.log(this.morphs);
     }
   },
 
@@ -35,13 +39,14 @@ AFRAME.registerComponent("proximity-blend", {
     const proxVal = getProximity(avatarPos);
     //console.log(proxVal);
 
-    const { minValue, maxValue, reverse } = this.data;
+    const { minValue, maxValue, reverse, maxDist, minDist } = this.data;
     const morphValue = !reverse
-      ? THREE.Math.mapLinear(easeOutQuadratic(proxVal ? proxVal : 0), 0, 1, minValue, maxValue)
-      : THREE.Math.mapLinear(easeOutQuadratic(proxVal ? proxVal : 0), 0, 1, maxValue, minValue);
-    //console.log(morphValue);
+      ? THREE.Math.mapLinear(proxVal ? proxVal : 0, maxDist, minDist, minValue, maxValue)
+      : THREE.Math.mapLinear(proxVal ? proxVal : 0, minDist, maxDist, minValue, maxValue);
+    const clampMorphValue = THREE.Math.clamp(morphValue, minValue, maxValue);
+    console.log(proxVal, morphValue, clampMorphValue);
     for (let i = 0; i < this.morphs.length; i++) {
-      this.morphs[i].mesh.morphTargetInfluences[this.morphs[i].morphNumber] = morphValue;
+      this.morphs[i].mesh.morphTargetInfluences[this.morphs[i].morphNumber] = clampMorphValue;
     }
   }
 });
