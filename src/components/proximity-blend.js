@@ -5,12 +5,19 @@ AFRAME.registerComponent("proximity-blend", {
     maxValue: { default: 2 },
     minDist: { default: 0 },
     maxDist: { default: 10 },
-    reverse: { default: false }
+    reverse: { default: false },
+    enabled: { default: false }
   },
 
   init() {
     //console.log("initializing prox blend");
     const meshes = [];
+    if (window.APP["prox-react"]) {
+      this.data.enabled = window.APP["prox-react"].enabled;
+      this.data.reverse = window.APP["prox-react"].reverse;
+    } else {
+      console.log("no prox react");
+    }
     if (this.el.object3DMap.skinnedmesh) {
       meshes.push(this.el.object3DMap.skinnedmesh);
     } else if (this.el.object3DMap.group) {
@@ -30,6 +37,7 @@ AFRAME.registerComponent("proximity-blend", {
 
   tick() {
     //console.log("ticking");
+    if (!this.data.enabled) return;
     if (!this.morphs || !this.morphs.length) {
       console.log("no morphs found");
       return;

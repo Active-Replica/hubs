@@ -1457,5 +1457,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   store.update({ preferences: { locale: "en" } });
 
+  // window.APP["prox-react"] = {
+  //   enabled: false,
+  //   reverse: false
+  // }
+
   // romamilend
 });
