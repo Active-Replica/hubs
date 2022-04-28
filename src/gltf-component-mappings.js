@@ -626,7 +626,7 @@ AFRAME.GLTFModelPlus.registerComponent("mirror", "mirror");
 AFRAME.GLTFModelPlus.registerComponent("proximity-scale", "proximity-scale");
 AFRAME.GLTFModelPlus.registerComponent("proximity-blend", "proximity-blend");
 AFRAME.GLTFModelPlus.registerComponent("prox-react", "prox-react", (el, _componentName, componentData) => {
-  console.log("redirecting data to prox-blend", componentData);
+  //console.log("redirecting data to prox-blend", componentData);
   let proxData = {
     enabled: componentData.enabled,
     reverse: componentData.reverse
