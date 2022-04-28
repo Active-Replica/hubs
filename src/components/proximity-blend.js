@@ -16,7 +16,7 @@ AFRAME.registerComponent("proximity-blend", {
       this.data.enabled = window.APP["prox-react"].enabled;
       this.data.reverse = window.APP["prox-react"].reverse;
     } else {
-      console.log("no prox react");
+      //console.log("no prox react");
     }
     if (this.el.object3DMap.skinnedmesh) {
       meshes.push(this.el.object3DMap.skinnedmesh);
@@ -24,14 +24,14 @@ AFRAME.registerComponent("proximity-blend", {
       // skinned mesh with multiple materials
       this.el.object3DMap.group.traverse(o => o.isSkinnedMesh && meshes.push(o));
     } else if (this.el.object3DMap.mesh) {
-      console.log("no skinned mesh");
+      //console.log("no skinned mesh");
       meshes.push(this.el.object3DMap.mesh);
     }
     if (meshes.length) {
       this.morphs = meshes
         .map(mesh => ({ mesh, morphNumber: mesh.morphTargetDictionary[this.data.name] }))
         .filter(m => m.morphNumber !== undefined);
-      console.log(this.morphs);
+      //console.log(this.morphs);
     }
   },
 
@@ -39,7 +39,7 @@ AFRAME.registerComponent("proximity-blend", {
     //console.log("ticking");
     if (!this.data.enabled) return;
     if (!this.morphs || !this.morphs.length) {
-      console.log("no morphs found");
+      //console.log("no morphs found");
       return;
     }
 
@@ -52,7 +52,7 @@ AFRAME.registerComponent("proximity-blend", {
       ? THREE.Math.mapLinear(proxVal ? proxVal : 0, maxDist, minDist, minValue, maxValue)
       : THREE.Math.mapLinear(proxVal ? proxVal : 0, minDist, maxDist, minValue, maxValue);
     const clampMorphValue = THREE.Math.clamp(morphValue, minValue, maxValue);
-    console.log(proxVal, morphValue, clampMorphValue);
+    //console.log(proxVal, morphValue, clampMorphValue);
     for (let i = 0; i < this.morphs.length; i++) {
       this.morphs[i].mesh.morphTargetInfluences[this.morphs[i].morphNumber] = clampMorphValue;
     }
