@@ -24,7 +24,8 @@ AFRAME.registerComponent("proximity-play-audio", {
     playing: { default: false },
     readyToPlay: { default: true },
     currentTime: { default: 0 },
-    reset: { default: false }
+    reset: { default: false },
+    shouldReset: { default: false }
   },
 
   init() {
@@ -33,6 +34,10 @@ AFRAME.registerComponent("proximity-play-audio", {
 
   tick(t, dt) {
     this.time += dt;
+    if (!this.el.getAttribute("media-video")) {
+      console.log("not yet loaded");
+      return;
+    }
     const paused = this.el.getAttribute("media-video").videoPaused;
     if (this.el.getAttribute("media-video").time < this.data.currentTime && !this.data.reset) {
       console.log("someone else reset");
@@ -73,8 +78,15 @@ AFRAME.registerComponent("proximity-play-audio", {
         this.data.readyToPlay = false;
       } else if (paused && this.data.readyToPlay && !this.data.someoneElseControlling) {
         //if simply paused by this client, start playing again
-        console.log("playing");
-        togglePlaying(this.el);
+        if (!this.data.shouldReset) {
+          console.log("playing");
+          togglePlaying(this.el);
+        } else {
+          console.log("resetting and playing");
+          resetPlaying(this.el);
+          togglePlaying(this.el);
+          this.data.reset = true;
+        }
         this.data.playing = true;
         this.data.readyToPlay = false;
       } else if (paused && this.data.readyToPlay && this.data.someoneElseControlling) {
