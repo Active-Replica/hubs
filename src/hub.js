@@ -150,6 +150,7 @@ import "./components/video-texture-target";
 import "./components/mirror";
 import "./components/proximity-scale";
 import "./components/proximity-blend";
+import "./components/proximity-play-audio";
 //activereplicaend
 
 import ReactDOM from "react-dom";
