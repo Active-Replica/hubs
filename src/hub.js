@@ -151,6 +151,7 @@ import "./components/mirror";
 import "./components/proximity-scale";
 import "./components/proximity-blend";
 import "./components/proximity-play-audio";
+import "./components/proximity-animation";
 //activereplicaend
 
 import ReactDOM from "react-dom";

@@ -1,8 +1,23 @@
 import { THREE } from "aframe";
 
 const getPlayerPosV = function() {
-  var playerPos = document.querySelector("#avatar-rig").object3D.position;
-  var playerPosV = new THREE.Vector3(playerPos.x, playerPos.y, playerPos.z);
+  if (!document.querySelector(".RightHand") && !document.querySelector(".LeftHand")) return;
+  let playerRightObj = document.querySelector(".RightHand").object3D;
+  let playerLeftObj = document.querySelector(".LeftHand").object3D;
+  let playerPosV;
+  if (!document.querySelector("[stats-plus]").components["stats-plus"].inVR) {
+    var playerPos = document.querySelector("#avatar-rig").object3D.position;
+    playerPosV = new THREE.Vector3(playerPos.x, playerPos.y, playerPos.z);
+  } else {
+    //console.log("checking controllers");
+    let rightV = new THREE.Vector3();
+    let leftV = new THREE.Vector3();
+    playerPosV = {
+      right: playerRightObj.getWorldPosition(rightV),
+      left: playerLeftObj.getWorldPosition(leftV)
+    };
+  }
+
   return playerPosV;
 };
 
@@ -11,7 +26,17 @@ const comparePosition = function(elementPos) {
   if (!playerPosV) return;
   var elementV = new THREE.Vector3(elementPos.x, elementPos.y, elementPos.z);
   if (!elementV) return;
-  return elementV.distanceTo(playerPosV);
+  if (playerPosV.right !== undefined) {
+    let rightComp = elementV.distanceTo(playerPosV.right);
+    let leftComp = elementV.distanceTo(playerPosV.left);
+    if (rightComp > leftComp) {
+      return leftComp;
+    } else {
+      return rightComp;
+    }
+  } else {
+    return elementV.distanceTo(playerPosV);
+  }
 };
 
 AFRAME.registerComponent("proximity-play-audio", {
