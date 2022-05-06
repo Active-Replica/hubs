@@ -9,7 +9,6 @@ const getPlayerPosV = function() {
     var playerPos = document.querySelector("#avatar-rig").object3D.position;
     playerPosV = new THREE.Vector3(playerPos.x, playerPos.y, playerPos.z);
   } else {
-    //console.log("checking controllers");
     let rightV = new THREE.Vector3();
     let leftV = new THREE.Vector3();
     playerPosV = {
@@ -60,12 +59,10 @@ AFRAME.registerComponent("proximity-play-audio", {
   tick(t, dt) {
     this.time += dt;
     if (!this.el.getAttribute("media-video")) {
-      console.log("not yet loaded");
       return;
     }
     const paused = this.el.getAttribute("media-video").videoPaused;
     if (this.el.getAttribute("media-video").time < this.data.currentTime && !this.data.reset) {
-      console.log("someone else reset");
       this.data.someoneElseControlling = true;
     }
     this.data.currentTime = this.el.getAttribute("media-video").time;
@@ -73,29 +70,23 @@ AFRAME.registerComponent("proximity-play-audio", {
     var dist = comparePosition(this.el.object3D.position);
     //need to check if the state has changed since last time
     if (paused && this.data.playing) {
-      console.log("someone else paused");
       this.data.someoneElseControlling = true;
     }
     if (!paused && !this.data.playing) {
-      console.log("someone else played");
       this.data.someoneElseControlling = true;
     }
     if (dist > this.data.pauseRadius) {
-      //console.log("exited pause threshold");
       if (!paused && !this.data.someoneElseControlling) {
-        console.log("pausing");
         togglePlaying(this.el);
         this.data.playing = false;
       }
       this.data.readyToPlay = true;
     }
     if (dist < this.data.playRadius) {
-      //console.log("entered play threshold");
       if (this.data.someoneElseControlling && !paused && this.data.readyToPlay) {
         //if playing, but not last activated by you
         //Restart file and play again
         //use for loop with seek back button
-        console.log("resetting");
         resetPlaying(this.el);
         this.data.someoneElseControlling = false;
         this.data.playing = true;
@@ -104,10 +95,8 @@ AFRAME.registerComponent("proximity-play-audio", {
       } else if (paused && this.data.readyToPlay && !this.data.someoneElseControlling) {
         //if simply paused by this client, start playing again
         if (!this.data.shouldReset) {
-          console.log("playing");
           togglePlaying(this.el);
         } else {
-          console.log("resetting and playing");
           resetPlaying(this.el);
           togglePlaying(this.el);
           this.data.reset = true;
@@ -116,7 +105,6 @@ AFRAME.registerComponent("proximity-play-audio", {
         this.data.readyToPlay = false;
       } else if (paused && this.data.readyToPlay && this.data.someoneElseControlling) {
         //if paused by someone else, play and reset
-        console.log("resetting and playing");
         resetPlaying(this.el);
         togglePlaying(this.el);
         this.data.playing = true;

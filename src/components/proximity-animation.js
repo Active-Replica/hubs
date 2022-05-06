@@ -10,7 +10,6 @@ const getPlayerPosV = function() {
     var playerPos = document.querySelector("#avatar-rig").object3D.position;
     playerPosV = new THREE.Vector3(playerPos.x, playerPos.y, playerPos.z);
   } else {
-    //console.log("checking controllers");
     let rightV = new THREE.Vector3();
     let leftV = new THREE.Vector3();
     playerPosV = {
@@ -47,17 +46,15 @@ AFRAME.registerComponent("proximity-animation", {
     shouldReset: { default: true },
     shouldLoop: { default: true },
     clipNames: { default: ["Animation"] },
-    animations: { default: [] },
-    hasEntered: { default: false }
+    animations: { default: [] }
   },
   init() {
-    console.log("initializing proximity animation");
     this.time = 0;
+    this.hasEntered = false;
     let interval = setInterval(() => {
       if (this.el.components["loop-animation"]) {
         this.data.animations = this.el.components["loop-animation"].mixerEl.components["animation-mixer"].animations;
         this.el.setAttribute("loop-animation", { paused: true });
-        console.log("init proxAnim finished");
         clearInterval(interval);
       }
     }, 100);
@@ -65,19 +62,18 @@ AFRAME.registerComponent("proximity-animation", {
   tick(t, dt) {
     this.time += dt;
     var dist = comparePosition(this.el.object3D.position);
-    if (dist > this.data.pauseDist && this.data.hasEntered) {
-      console.log("outside threshold");
-      this.data.hasEntered = false;
+    if (dist > this.data.pauseDist) {
+      if (!this.hasEntered) return;
+      this.hasEntered = !this.hasEntered;
       //PAUSE ANIMATION
       if (this.data.shouldReset) {
         this.el.components["loop-animation"].destroy();
       } else {
         this.el.setAttribute("loop-animation", { paused: true });
       }
-    }
-    if (dist < this.data.playDist && !this.data.hasEntered) {
-      console.log("inside threshold");
-      this.data.hasEntered = true;
+    } else if (dist < this.data.playDist) {
+      if (this.hasEntered) return;
+      this.hasEntered = !this.hasEntered;
       //RESTART OR RESUME ANIMATION
       if (this.data.shouldReset) {
         this.restartAnim();
@@ -87,9 +83,10 @@ AFRAME.registerComponent("proximity-animation", {
     }
   },
   restartAnim() {
-    console.log("resetting anim");
     if (this.data.animations.length < 1) return;
-    const clips = this.data.animations.filter(x => this.data.clipNames.includes(x.label));
+    let currentClips = [...this.data.clipNames];
+    const clipNames = currentClips.map(x => x.label);
+    const clips = this.data.animations.filter(x => clipNames.includes(x.name));
     const mixer = this.el.components["loop-animation"].mixerEl.components["animation-mixer"].mixer;
     for (let i = 0; i < clips.length; i++) {
       let action = mixer.clipAction(clips[i], this.el.object3D);
