@@ -27,8 +27,7 @@ const messages = defineMessages({
   },
   [ExitReason.denied]: {
     id: "exited-room-screen.reason.denied",
-    defaultMessage:
-      "This session is at capacity. Please join the overflow room to experience today's conversation: https://hubs.mozillafestival.org/8BfXgqM/overflow"
+    defaultMessage: "You are not permitted to join this room. Please request permission from the room creator."
   },
   [ExitReason.disconnected]: {
     id: "exited-room-screen.reason.disconnected",
