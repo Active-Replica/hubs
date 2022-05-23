@@ -37,8 +37,9 @@ AFRAME.registerComponent("proximity-blend", {
       return;
     }
 
-    let avatarPos = document.querySelector("#avatar-rig").object3D.position;
-    const proxVal = getProximity(avatarPos);
+    let rootEl = getRootPosition(this.el);
+
+    const proxVal = getProximity(rootEl.components["ik-root"].el.object3D.position, rootEl.id);
 
     const { minValue, maxValue, reverse, maxDist, minDist } = this.data;
     const morphValue = !reverse
@@ -51,17 +52,28 @@ AFRAME.registerComponent("proximity-blend", {
   }
 });
 
-const getProximity = position => {
+const getRootPosition = el => {
+  while (el && !(el.components && el.components["ik-root"])) {
+    el = el.parentNode;
+  }
+
+  return el;
+
+  // let pos = el.components["ik-root"].el.object3D.position;
+  // return pos;
+};
+
+const getProximity = (position, id) => {
   const playerPos = new THREE.Vector3(position.x, position.y, position.z);
 
-  //Query all avatar heads
-  let heads = document.querySelectorAll("[networked-avatar]");
-  if (heads.length < 2) return;
+  //Get position to all other entities outside of this one
+  let avatars = document.querySelectorAll("[networked-avatar]");
+  if (avatars.length < 2) return;
   let distances = [];
 
-  for (let i = 0; i < heads.length; i++) {
-    if (heads[i].id !== "avatar-rig") {
-      let otherPosition = heads[i].object3D.position;
+  for (let i = 0; i < avatars.length; i++) {
+    if (avatars[i].id !== id) {
+      let otherPosition = avatars[i].object3D.position;
       let otherHead = new THREE.Vector3(otherPosition.x, otherPosition.y, otherPosition.z);
       let distance = playerPos.distanceTo(otherHead);
       distances.push(distance);
