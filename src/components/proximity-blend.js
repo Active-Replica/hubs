@@ -11,10 +11,13 @@ AFRAME.registerComponent("proximity-blend", {
 
   init() {
     const meshes = [];
+    //delay init until window.APP['prox-react'] !undefined
+    while (!window.APP["prox-react"]) {
+      console.log("prox-react does not exist");
+    }
     if (window.APP["prox-react"]) {
       this.data.enabled = window.APP["prox-react"].enabled;
       this.data.reverse = window.APP["prox-react"].reverse;
-    } else {
     }
     if (this.el.object3DMap.skinnedmesh) {
       meshes.push(this.el.object3DMap.skinnedmesh);
