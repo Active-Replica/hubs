@@ -4,7 +4,7 @@ import classNames from "classnames";
 import { Modal } from "../modal/Modal";
 import { Button } from "../input/Button";
 import { ReactComponent as EnterIcon } from "../icons/Enter.svg";
-import { ReactComponent as VRIcon } from "../icons/VR.svg";
+import { ReactComponent as VRIcon } from "../icons/VR_white.svg";
 import { ReactComponent as ShowIcon } from "../icons/Show.svg";
 import { ReactComponent as SettingsIcon } from "../icons/Settings.svg";
 import { ReactComponent as HmcLogo } from "../icons/HmcLogo.svg";
@@ -41,12 +41,6 @@ export function RoomEntryModal({
               {isHmc ? <HmcLogo className="hmc-logo" /> : <img src={logoSrc} alt={appName} />}
             </div>
           )}
-        <div className={styles.roomName}>
-          <h5>
-            <FormattedMessage id="room-entry-modal.room-name-label" defaultMessage="Room Name" />
-          </h5>
-          <p>{roomName}</p>
-        </div>
         <Column center className={styles.buttons}>
           {showJoinRoom && (
             <Button preset="accent4" onClick={onJoinRoom}>
@@ -57,18 +51,20 @@ export function RoomEntryModal({
             </Button>
           )}
           {showEnterOnDevice && (
-            <Button preset="accent5" onClick={onEnterOnDevice}>
+            <Button preset="accent5" onClick={onEnterOnDevice}
+						  style={{"backgroundColor": "transparent", "border": "none"}}>
               <VRIcon />
               <span>
-                <FormattedMessage id="room-entry-modal.enter-on-device-button" defaultMessage="Enter On Device" />
+                <FormattedMessage style={{"color":"black"}} id="room-entry-modal.enter-on-device-button" defaultMessage="Enter On Device" />
               </span>
             </Button>
           )}
           {showSpectate && (
-            <Button preset="accent2" onClick={onSpectate}>
+            <Button preset="accent2" onClick={onSpectate}
+						  style={{"backgroundColor": "transparent", "border": "none"}}>
               <ShowIcon />
               <span>
-                <FormattedMessage id="room-entry-modal.spectate-button" defaultMessage="Spectate" />
+                <FormattedMessage style={{"color":"black"}} id="room-entry-modal.spectate-button" defaultMessage="Spectate" />
               </span>
             </Button>
           )}

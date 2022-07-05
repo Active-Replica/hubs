@@ -14,6 +14,7 @@ export function AvatarSettingsContent({
   avatarPreview,
   displayNamePattern,
   onChangeAvatar,
+  showAvatarSelection,
   ...rest
 }) {
   return (
@@ -34,12 +35,13 @@ export function AvatarSettingsContent({
         }
         ref={displayNameInputRef}
       />
-      <div className={styles.avatarPreviewContainer}>
+      {showAvatarSelection && ( <div className={styles.avatarPreviewContainer}>
         {avatarPreview || <div />}
         <Button type="button" preset="basic" onClick={onChangeAvatar}>
           <FormattedMessage id="avatar-settings-content.change-avatar-button" defaultMessage="Change Avatar" />
         </Button>
       </div>
+      )}
       <AcceptButton preset="accept" type="submit" />
     </Column>
   );
@@ -53,5 +55,6 @@ AvatarSettingsContent.propTypes = {
   displayNamePattern: PropTypes.string,
   onChangeDisplayName: PropTypes.func,
   avatarPreview: PropTypes.node,
-  onChangeAvatar: PropTypes.func
+  onChangeAvatar: PropTypes.func,
+  showAvatarSelection: PropTypes.bool
 };

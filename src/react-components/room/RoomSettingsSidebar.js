@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import styles from "./RoomSettingsSidebar.scss";
@@ -32,7 +31,6 @@ export function RoomSettingsSidebar({
   canChangeScene,
   onChangeScene
 }) {
-
   const intl = useIntl();
   const { handleSubmit, register, watch, errors, setValue } = useForm({
     defaultValues: room
@@ -41,80 +39,14 @@ export function RoomSettingsSidebar({
   const entryMode = watch("entry_mode");
   const spawnAndMoveMedia = watch("member_permissions.spawn_and_move_media");
 
-  const onChangeToggleRoom = ( elt ) => {
-		window.isRoomOpen = elt.target.checked;
-		document.getElementById("textInputFieldRoomSize").value = window.isRoomOpen ? "24" : "0";
-
-		const data = new URLSearchParams();
-
-		let myUrl = new URL( window.location )
-    if(myUrl.pathname === "/") {
-		  data.append("sublink", "/");
-		  data.append("name", "main");
-    } else {
-		  data.append("sublink", myUrl.pathname.split("/")[1]);
-		  data.append("name", myUrl.pathname.split("/")[2]);
-    }
-    data.append("isRoomOpen", window.isRoomOpen);
-
-		fetch("https://chat-hubs.glitch.me/updateroom", {
-    	method: 'post',
-    	body: data,
-		})
-    .then((data) => {
-      window.changedFromUI = false;
-    })
-		.catch((error) => {
-      window.changedFromUI = false;
-			console.error('Error:', error);
-		});
-	}
-
-  const onChangeToggleChat = ( elt ) => {
-		
-		window.isChatOpen = elt.target.checked;
-
-		const data = new URLSearchParams();
-
-		let myUrl = new URL( window.location )
-    if(myUrl.pathname === "/") {
-		  data.append("sublink", "/");
-		  data.append("name", "main");
-    } else {
-		  data.append("sublink", myUrl.pathname.split("/")[1]);
-		  data.append("name", myUrl.pathname.split("/")[2]);
-    }
-    data.append("isChatOpen", window.isChatOpen);
-
-		fetch("https://chat-hubs.glitch.me/updateroom", {
-    	method: 'post',
-    	body: data,
-		})
-		.catch((error) => {
-			console.error('Error:', error);
-		});
-
-	}
-
   useEffect(
     () => {
-
-			console.log("useEffect");
-      window.changedFromUI = true;
-			if(document.getElementById("textInputFieldRoomSize").value != "0")
-				window.isRoomOpen = true
-			else 
-				window.isRoomOpen = false;
-				
-  		document.getElementById("toggleInputBlockChat").checked = window.isChatOpen;
-  		document.getElementById("toggleInputBlockRoom").checked = window.isRoomOpen;
-
       if (!spawnAndMoveMedia) {
         setValue("member_permissions.spawn_camera", false, { shouldDirty: true });
         setValue("member_permissions.pin_objects", false, { shouldDirty: true });
       }
-    }
-//		,[spawnAndMoveMedia, setValue]
+    },
+    [spawnAndMoveMedia, setValue]
   );
 
   return (
@@ -159,7 +91,6 @@ export function RoomSettingsSidebar({
           fullWidth
         />
         <NumericInputField
-					id="textInputFieldRoomSize"
           name="room_size"
           required
           min={0}
@@ -265,20 +196,19 @@ export function RoomSettingsSidebar({
               ref={register}
             />
             <ToggleInput
-							id="toggleInputBlockRoom"
-              label={<FormattedMessage id="room-settings-sidebar.allow-entering" defaultMessage="Allow entering" />}
-            	onChange={onChangeToggleRoom}
+              name="user_data.block_access"
+              label={<FormattedMessage id="user_data.block_access" defaultMessage="Block access" />}
+              ref={register}
             />
-						<ToggleInput
-							id="toggleInputBlockChat"
-							label={<FormattedMessage id="block-chat" defaultMessage="Allow chat" />}
-							onChange={onChangeToggleChat}
-						/>
+            <ToggleInput
+              name="user_data.block_chat"
+              label={<FormattedMessage id="user_data.block_chat" defaultMessage="Block chat" />}
+              ref={register}
+            />
           </div>
         </InputField>
         <ApplyButton type="submit" />
       </Column>
-			<br/>
     </Sidebar>
   );
 }

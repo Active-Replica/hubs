@@ -12,7 +12,7 @@ export function AvatarSetupModal({ className, onBack, ...rest }) {
       beforeTitle={<BackButton onClick={onBack} />}
       className={className}
     >
-      <AvatarSettingsContent {...rest} />
+      <AvatarSettingsContent {...rest} showAvatarSelection={false}/>
     </Modal>
   );
 }

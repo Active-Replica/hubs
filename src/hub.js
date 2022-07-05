@@ -267,37 +267,6 @@ import { LogMessageType } from "./react-components/room/ChatSidebar";
 // Import of the private_hubs_assets javascript files (intended as javascript classes)
 import stgSysClass from "./private_hubs_assets/stage-system.js";
 import testPersonalCodeClass from "./private_hubs_assets/testPersonalcode.js";
-window.changedFromUI = false;
-
-// needed to happen before the UI is loaded
-fetch(proxiedUrlFor("https://chat-hubs.glitch.me/db"))
-  .then(function(response) {
-    return response.json();
-  })
-  .then(data => {
-    window.isRoomOpen = true;
-    window.isChatOpen = true;
-
-    let myUrl = new URL(window.location);
-    let mySublink = myUrl.pathname.split("/")[1];
-    //console.log(data.listRoom);
-
-    for (let eltRoom of data.listRoom) {
-      //console.log(eltRoom);
-      if (eltRoom.sublink == mySublink) {
-        //console.log("found!")
-        console.log("Room Info");
-        console.log(eltRoom);
-        //window.isRoomOpen = eltRoom.isRoomOpen === "true";
-        //window.isChatOpen = eltRoom.isChatOpen === "true";
-        window.isRoomOpen = eltRoom.isRoomOpen;
-        window.isChatOpen = eltRoom.isChatOpen;
-        //if(!window.isChatOpen)
-        //  document.getElementById("chatMenuButton").style.display = "none"
-      }
-    }
-  });
-//romamilend
 
 const PHOENIX_RELIABLE_NAF = "phx-reliable";
 NAF.options.firstSyncSource = PHOENIX_RELIABLE_NAF;

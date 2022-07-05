@@ -218,52 +218,6 @@ class UIRoot extends Component {
     this.exitEventHandler = () => this.props.exitScene();
     this.mediaDevicesManager = window.APP.mediaDevicesManager;
 
-    window.firstInfoFromServer = true;
-
-    setInterval(() => {
-			fetch(proxiedUrlFor("https://chat-hubs.glitch.me/db"))
-				.then(function (response) {
-					return response.json();
-				})
-				.then((data) => {
-
-          if(window.changedFromUI)
-            return;
-
-					let myUrl = new URL( window.location )
-					let mySublink = "/";
-          if(myUrl.pathname !== "/") {
-					  mySublink = myUrl.pathname.split("/")[1];
-          }
-
-					for(let eltRoom of data.listRoom) {
-						if(eltRoom.sublink == mySublink) {
-
-							if(window.isChatOpen != eltRoom.isChatOpen) {
-								window.isChatOpen = eltRoom.isChatOpen;
-								if(document.getElementById("chatMenuButton") != null)
-									document.getElementById("chatMenuButton").style.display = window.isChatOpen ? "block" : "none";
-                if(!window.isChatOpen && this.state.sidebarId === "chat")
-                  this.setSidebar("")
-							}
-
-							if(window.isRoomOpen != eltRoom.isRoomOpen) {
-								window.isRoomOpen = eltRoom.isRoomOpen;
-                console.log("========")
-                console.log(isRoomOpen)
-                console.log(eltRoom.isRoomOpen)
-                console.log(window.firstInfoFromServer)
-								if(!window.isRoomOpen && !window.firstInfoFromServer) {
-									location.reload();
-								}
-                window.firstInfoFromServer = false;
-							}
-							
-						}
-					}
-				})
-		}, 1000);
-
   }
 
   componentDidUpdate(prevProps) {
@@ -1157,7 +1111,9 @@ class UIRoot extends Component {
 
     const canCreateRoom = !configs.feature("disable_room_creation") || configs.isAdmin();
     const canCloseRoom = this.props.hubChannel && !!this.props.hubChannel.canOrWillIfCreator("close_hub");
-    const isModerator = this.props.hubChannel && this.props.hubChannel.canOrWillIfCreator("kick_users") && !isMobileVR;    const isAdmin = window.location.toString().includes("admin");
+    const isModerator = this.props.hubChannel && this.props.hubChannel.canOrWillIfCreator("kick_users") && !isMobileVR;
+    const isAdmin = window.location.toString().includes("admin");
+    const canChat = this.props.hub.user_data === null ? true : (this.props.hub.user_data.block_chat !== undefined && !this.props.hub.user_data.block_chat);
 
 
     const moreMenu = [
@@ -1352,7 +1308,6 @@ class UIRoot extends Component {
 
 		// romamile
 			const cueUI = window.stgSys.renderCueUI();
-      const isChatOpen = window.isChatOpen
 	
 	  // romamilend
 
@@ -1484,7 +1439,7 @@ class UIRoot extends Component {
                           onClick={() => this.toggleSidebar("people")}
                           presencecount={this.state.presenceCount}
                         />
-                        {isChatOpen && (
+                        {canChat && (
                         <ChatMenuButton
                           id="chatMenuButton"
                           active={this.state.sidebarId === "chat"}
@@ -1544,7 +1499,7 @@ class UIRoot extends Component {
                 sidebar={
                   this.state.sidebarId ? (
                     <>
-                      {this.state.sidebarId === "chat" && (
+                      {this.state.sidebarId === "chat" && canChat && (
                         <ChatSidebarContainer
                           id="chatSideBarContainer_id"
                           presences={this.props.presences}
