@@ -31,8 +31,8 @@ export const defaultMaterialQualitySetting = (function() {
     return qsDefault;
   }
   //mikemorran
-  //return "high";
-  return "medium";
+  return "high";
+  // return "medium";
   //mikemorranend
 })();
 
