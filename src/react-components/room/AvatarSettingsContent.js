@@ -21,7 +21,7 @@ export function AvatarSettingsContent({
     <Column as="form" className={styles.content} {...rest}>
       <TextInputField
         disabled={disableDisplayNameInput}
-        label={<FormattedMessage id="avatar-settings-content.display-name-label" defaultMessage="Display Name" />}
+        label={<FormattedMessage id="avatar-settings-content.display-name-label" defaultMessage="Display Name Required" />}
         value={displayName}
         pattern={displayNamePattern}
         spellCheck="false"

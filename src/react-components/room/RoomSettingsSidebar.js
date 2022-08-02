@@ -205,6 +205,11 @@ export function RoomSettingsSidebar({
               label={<FormattedMessage id="user_data.block_chat" defaultMessage="Block chat" />}
               ref={register}
             />
+            <ToggleInput
+              name="user_data.block_audio"
+              label={<FormattedMessage id="user_data.block_audio" defaultMessage="Block audio" />}
+              ref={register}
+            />
           </div>
         </InputField>
         <ApplyButton type="submit" />

@@ -8,6 +8,7 @@ import PropTypes from "prop-types";
 import { useCssBreakpoints } from "react-use-css-breakpoints";
 import classNames from "classnames";
 import { CloseButton } from "../input/CloseButton";
+import {logo} from "../../assets/logoAR.png"
 
 function PopoverArrow() {
   return (
@@ -60,6 +61,19 @@ export function Popover({
   const openPopover = useCallback(() => setVisible(true), [setVisible]);
   const closePopover = useCallback(() => setVisible(false), [setVisible]);
   const togglePopover = useCallback(() => setVisible(visible => !visible), [setVisible]);
+
+  let header;
+  if(title !== "More") {
+    header = (<h5>{title}</h5>)
+  } else {
+    header = (
+      <a href="https://www.activereplica.com/">
+        <img src="../../assets/logoAR.png" className="logoMore"/>
+        <h5>powered by Active Replica</h5>
+      </a>
+    );
+
+  }
 
   useEffect(
     () => {
@@ -140,7 +154,7 @@ export function Popover({
           >
             <div className={styles.header}>
               <CloseButton onClick={closePopover} />
-              <h5>{title}</h5>
+              {header}
             </div>
             <div className={styles.content}>
               {typeof Content === "function" ? (

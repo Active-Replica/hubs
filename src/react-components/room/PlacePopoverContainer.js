@@ -14,7 +14,7 @@ import { ObjectUrlModalContainer } from "./ObjectUrlModalContainer";
 import configs from "../../utils/configs";
 import { FormattedMessage } from "react-intl";
 
-export function PlacePopoverContainer({ scene, mediaSearchStore, showNonHistoriedDialog, hubChannel }) {
+export function PlacePopoverContainer({ scene, mediaSearchStore, showNonHistoriedDialog, hubChannel, isOwner}) {
   const [items, setItems] = useState([]);
 
   useEffect(
@@ -55,7 +55,7 @@ export function PlacePopoverContainer({ scene, mediaSearchStore, showNonHistorie
               label: <FormattedMessage id="place-popover.item-type.gif" defaultMessage="GIF" />,
               onSelect: () => mediaSearchStore.sourceNavigate("gifs")
             },
-            configs.integration("sketchfab") && {
+            isOwner && configs.integration("sketchfab") && {
               id: "model",
               icon: ObjectIcon,
               color: "accent2",
@@ -69,7 +69,7 @@ export function PlacePopoverContainer({ scene, mediaSearchStore, showNonHistorie
               label: <FormattedMessage id="place-popover.item-type.avatar" defaultMessage="Avatar" />,
               onSelect: () => mediaSearchStore.sourceNavigate("avatars")
             },
-            {
+            isOwner && {
               id: "scene",
               icon: SceneIcon,
               color: "accent1",
@@ -118,6 +118,7 @@ export function PlacePopoverContainer({ scene, mediaSearchStore, showNonHistorie
 PlacePopoverContainer.propTypes = {
   hubChannel: PropTypes.object.isRequired,
   scene: PropTypes.object.isRequired,
+  isOwner: PropTypes.bool,
   mediaSearchStore: PropTypes.object.isRequired,
   showNonHistoriedDialog: PropTypes.func.isRequired
 };

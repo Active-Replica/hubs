@@ -51,8 +51,8 @@ export function RoomEntryModal({
             </Button>
           )}
           {showEnterOnDevice && (
-            <Button preset="accent5" onClick={onEnterOnDevice}
-						  style={{"backgroundColor": "transparent", "border": "none"}}>
+            <Button preset="transparent" onClick={onEnterOnDevice}
+						  style={{"color": "black", "backgroundColor": "transparent", "border": "none"}}>
               <VRIcon />
               <span>
                 <FormattedMessage style={{"color":"black"}} id="room-entry-modal.enter-on-device-button" defaultMessage="Enter On Device" />
@@ -60,8 +60,8 @@ export function RoomEntryModal({
             </Button>
           )}
           {showSpectate && (
-            <Button preset="accent2" onClick={onSpectate}
-						  style={{"backgroundColor": "transparent", "border": "none"}}>
+            <Button preset="transparent" onClick={onSpectate}
+						  style={{"color": "black", "backgroundColor": "transparent", "border": "none"}}>
               <ShowIcon />
               <span>
                 <FormattedMessage style={{"color":"black"}} id="room-entry-modal.spectate-button" defaultMessage="Spectate" />

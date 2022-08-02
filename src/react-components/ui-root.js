@@ -826,19 +826,25 @@ class UIRoot extends Component {
           roomName={this.props.hub.name}
           showJoinRoom={!this.state.waitingOnAudio && !this.props.entryDisallowed}
           onJoinRoom={() => {
-            if (promptForNameAndAvatarBeforeEntry || !this.props.forcedVREntryType) {
-              this.setState({ entering: true });
-              this.props.hubChannel.sendEnteringEvent();
 
-              if (promptForNameAndAvatarBeforeEntry) {
-                this.pushHistoryState("entry_step", "profile");
-              } else {
-                this.onRequestMicPermission();
-                this.pushHistoryState("entry_step", "mic_grant");
-              }
-            } else {
-              this.handleForceEntry();
-            }
+    				const canAudio = this.props.hub.user_audio === null ? true : (this.props.hub.user_data.block_audio !== undefined && !this.props.hub.user_data.block_audio);
+						if(canAudio) {
+							if (promptForNameAndAvatarBeforeEntry || !this.props.forcedVREntryType) {
+								this.setState({ entering: true });
+								this.props.hubChannel.sendEnteringEvent();
+
+								if (promptForNameAndAvatarBeforeEntry) {
+									this.pushHistoryState("entry_step", "profile");
+								} else {
+									this.onRequestMicPermission();
+									this.pushHistoryState("entry_step", "mic_grant");
+								}
+							} else {
+								this.handleForceEntry();
+							}
+						} else {
+							this.onAudioReadyButton();
+						}
           }}
           showEnterOnDevice={!this.state.waitingOnAudio && !this.props.entryDisallowed && !isMobileVR}
           onEnterOnDevice={() => this.attemptLink()}
@@ -1114,6 +1120,7 @@ class UIRoot extends Component {
     const isModerator = this.props.hubChannel && this.props.hubChannel.canOrWillIfCreator("kick_users") && !isMobileVR;
     const isAdmin = window.location.toString().includes("admin");
     const canChat = this.props.hub.user_data === null ? true : (this.props.hub.user_data.block_chat !== undefined && !this.props.hub.user_data.block_chat);
+    const canAudio = this.props.hub.user_audio === null ? true : (this.props.hub.user_data.block_audio !== undefined && !this.props.hub.user_data.block_audio);
 
 
     const moreMenu = [
@@ -1308,7 +1315,6 @@ class UIRoot extends Component {
 
 		// romamile
 			const cueUI = window.stgSys.renderCueUI();
-	
 	  // romamilend
 
     return (
@@ -1330,6 +1336,7 @@ class UIRoot extends Component {
                       hubChannel={this.props.hubChannel}
                       mediaSearchStore={this.props.mediaSearchStore}
                       showNonHistoriedDialog={this.showNonHistoriedDialog}
+											isOwner={this.props.presences[this.props.sessionId].metas[0].roles.owner}
                     />
                     {this.props.hubChannel.can("spawn_emoji") && <ReactionPopoverContainer />}
                                        {false && (     <img

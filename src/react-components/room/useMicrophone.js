@@ -44,6 +44,10 @@ export function useMicrophone(scene, updateRate = 50) {
   );
 
   const toggleMute = useCallback(() => {
+
+    /* If mic not already permitted, then ask for permission */
+
+
     APP.dialog.toggleMicrophone();
   }, []);
 
