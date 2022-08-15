@@ -1428,6 +1428,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   store.update({ preferences: { locale: "en" } });
 
+	// Connexion between rooms handling
+	
+  if (qs.has("av-name")) {
+   store.update({ profile: { displayName: qs.get("av-name")} });
+   store.state.activity.hasChangedName = true;
+	}
+
+  if (qs.has("av-id")) {
+   //store.state.profile.avatarId = qs.get("av-id")
+   console.log("avatar => " + qs.get("av-id");
+   //store.state.profile.avatarId = proxiedUrlFor("link...zeoif.glb");
+	}
+	
+
   // window.APP["prox-react"] = {
   //   enabled: false,
   //   reverse: false

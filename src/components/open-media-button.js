@@ -65,7 +65,8 @@ AFRAME.registerComponent("open-media-button", {
           changeHub(hubId);
         } else {
           await exitImmersive();
-          location.href = this.src;
+					// Connecting to a non local hubs room
+          location.href = this.src+"?av-name="+window.APP.store.state.profile.displayName+"&av-id"+window.APP.store.state.profile.avatarId;
         }
       } else {
         await exitImmersive();

@@ -92,6 +92,7 @@ import { SafariMicModal } from "./room/SafariMicModal";
 import { RoomSignInModalContainer } from "./auth/RoomSignInModalContainer";
 import { SignInStep } from "./auth/SignInModal";
 import { LeaveReason, LeaveRoomModal } from "./room/LeaveRoomModal";
+import { InfoReason, InfoRoomModal } from "./room/InfoRoomModal";
 import { RoomSidebar } from "./room/RoomSidebar";
 import { RoomSettingsSidebarContainer } from "./room/RoomSettingsSidebarContainer";
 import { AutoExitWarningModal, AutoExitReason } from "./room/AutoExitWarningModal";
@@ -827,7 +828,7 @@ class UIRoot extends Component {
           showJoinRoom={!this.state.waitingOnAudio && !this.props.entryDisallowed}
           onJoinRoom={() => {
 
-    				const canAudio = this.props.hub.user_audio === null ? true : (this.props.hub.user_data.block_audio !== undefined && !this.props.hub.user_data.block_audio);
+    				const canAudio = this.props.hub.user_data === null ? true : (this.props.hub.user_data.block_audio !== undefined && !this.props.hub.user_data.block_audio);
 						if(canAudio) {
 							if (promptForNameAndAvatarBeforeEntry || !this.props.forcedVREntryType) {
 								this.setState({ entering: true });
@@ -1120,7 +1121,7 @@ class UIRoot extends Component {
     const isModerator = this.props.hubChannel && this.props.hubChannel.canOrWillIfCreator("kick_users") && !isMobileVR;
     const isAdmin = window.location.toString().includes("admin");
     const canChat = this.props.hub.user_data === null ? true : (this.props.hub.user_data.block_chat !== undefined && !this.props.hub.user_data.block_chat);
-    const canAudio = this.props.hub.user_audio === null ? true : (this.props.hub.user_data.block_audio !== undefined && !this.props.hub.user_data.block_audio);
+    const canAudio = this.props.hub.user_data === null ? true : (this.props.hub.user_data.block_audio !== undefined && !this.props.hub.user_data.block_audio);
 
 
     const moreMenu = [
@@ -1329,6 +1330,8 @@ class UIRoot extends Component {
                     <VoiceButtonContainer
                       scene={this.props.scene}
                       microphoneEnabled={this.mediaDevicesManager.isMicShared}
+											canAudio={canAudio}
+                  		showNonHistoriedDialog={this.showNonHistoriedDialog}
                     />
                     <SharePopoverContainer scene={this.props.scene} hubChannel={this.props.hubChannel} />
                     <PlacePopoverContainer

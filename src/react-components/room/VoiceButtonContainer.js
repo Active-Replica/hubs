@@ -5,8 +5,9 @@ import { ReactComponent as MicrophoneMutedIcon } from "../icons/MicrophoneMuted.
 import { ToolbarButton } from "../input/ToolbarButton";
 import { useMicrophone } from "./useMicrophone";
 import { FormattedMessage } from "react-intl";
+import { InfoReason, InfoRoomModal } from "./InfoRoomModal";
 
-export function VoiceButtonContainer({ scene, microphoneEnabled }) {
+export function VoiceButtonContainer({ scene, microphoneEnabled, showNonHistoriedDialog, canAudio}) {
   const buttonRef = useRef();
 
   const { isMuted, volume, toggleMute } = useMicrophone(scene);
@@ -34,7 +35,16 @@ export function VoiceButtonContainer({ scene, microphoneEnabled }) {
       icon={isMuted || !microphoneEnabled ? <MicrophoneMutedIcon /> : <MicrophoneIcon />}
       label={<FormattedMessage id="voice-button-container.label" defaultMessage="Voice" />}
       preset="basic"
-      onClick={toggleMute}
+      onClick={ () => {
+        if(canAudio) {
+          toggleMute();
+        } else {
+          showNonHistoriedDialog(InfoRoomModal, {
+            destinationUrl: "/",
+            reason: InfoReason.audioBlocked
+          })
+        }
+      }}
       statusColor={isMuted || !microphoneEnabled ? "disabled" : "enabled"}
     />
   );
@@ -42,5 +52,7 @@ export function VoiceButtonContainer({ scene, microphoneEnabled }) {
 
 VoiceButtonContainer.propTypes = {
   scene: PropTypes.object.isRequired,
-  microphoneEnabled: PropTypes.bool
+  microphoneEnabled: PropTypes.bool,
+  canAudio: PropTypes.bool,
+  showNonHistoriedDialog: PropTypes.func.isRequired
 };
