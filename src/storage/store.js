@@ -364,6 +364,21 @@ export default class Store extends EventTarget {
     const finalState = merge(this.state, newState, mergeOpts);
     const { valid } = validator.validate(finalState, SCHEMA);
 
+		//romamile
+			// Sending info to widget
+    if (newState.profile !== undefined
+		&& document.getElementById("iframeUser") !== null
+		&& window.hasFirstCheckedAvatar) {
+			console.log("send profile to iframe");
+			//const userData = JSON.parse(localStorage.getItem("___hubs_store")).profile;
+			const userData = newState.profile;
+			console.log(userData);
+			let mess = {name:"updateuser", info:userData}
+			let rez = document.getElementById("iframeUser").contentWindow.postMessage(mess, '*');
+		}
+		//romamilend
+		
+
     if (!valid) {
       // Intentionally not including details about the state or validation result here, since we don't want to leak
       // sensitive data in the error message.

@@ -1426,10 +1426,24 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (qs.has("k")) stgSys.initUser(qs.get("k"));
   else console.log(stgSys.myUser);
 
-  store.update({ preferences: { locale: "en" } });
+	
+  // Should clean it, doing it once APP has been created
+  let tmpInt = setInterval(() => {
+		if(window.APP !== undefined) {
+			//console.log("===========>")
+			//console.log(window.APP.hub.user_data)
+			if(window.APP.hub.user_data !== null) {
+				if(window.APP.hub.user_data.localisation !== undefined) {
+					console.log("localisation per room => " + window.APP.hub.user_data.localisation);
+					store.update({ preferences: { locale: window.APP.hub.user_data.localisation } });
+				}
+			}
+			clearInterval(tmpInt);
+		}
+	}, 100);
 
 	// Connexion between rooms handling
-	
+/*	
   if (qs.has("av-name")) {
    store.update({ profile: { displayName: qs.get("av-name")} });
    store.state.activity.hasChangedName = true;
@@ -1437,10 +1451,61 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (qs.has("av-id")) {
    //store.state.profile.avatarId = qs.get("av-id")
-   console.log("avatar => " + qs.get("av-id");
+   console.log("avatar => " + qs.get("av-id"));
    //store.state.profile.avatarId = proxiedUrlFor("link...zeoif.glb");
 	}
-	
+*/
+
+
+  // Handling of avatar/name info over different servers with iFrame "like button"
+  let userIframe = document.createElement('iframe')
+  document.body.appendChild(userIframe);
+  userIframe.id = 'iframeUser'
+  userIframe.src="https://ar-user.glitch.me/user"
+  userIframe.style="border: none"
+  userIframe.width="0"
+  userIframe.height="0"
+
+  console.log(userIframe);
+/*
+  window.checkA = () => {
+    const userData = JSON.parse(localStorage.getItem("userInfo"));
+    console.log(userData);
+    let mess = {name:"checkuser", info:userData}
+    let rez = userIframe.contentWindow.postMessage(mess, '*');
+  };
+*/
+  
+  window.hasFirstCheckedAvatar = false;
+
+  window.onmessage = (e) => {
+    if (e.data.name == 'returnuser') {
+      //console.log("-- data --")
+      //console.log(e.data.ok);
+      
+      if (localStorage.getItem("___hubs_store") !== null) {
+        if (e.data.info !== null) {
+
+            // 1) set profile
+          store.update({ profile: { displayName: e.data.info.displayName} });
+          store.update({ profile: { avatarId: e.data.info.avatarId} });
+
+            // 2) Force enter
+          window.forceEnter();
+
+        }
+        window.hasFirstCheckedAvatar = true;
+        clearInterval(tmpInt2);
+      }
+
+    }
+  };
+
+  let tmpInt2 = setInterval(() => {
+    let mess = {name:"getuser"}
+    let rez = userIframe.contentWindow.postMessage(mess, '*');
+	}, 500);
+
 
   // window.APP["prox-react"] = {
   //   enabled: false,

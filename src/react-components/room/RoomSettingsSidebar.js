@@ -16,6 +16,7 @@ import { BackButton } from "../input/BackButton";
 import { SceneInfo } from "./RoomSidebar";
 import { Column } from "../layout/Column";
 import { InviteLinkInputField } from "./InviteLinkInputField";
+import { AVAILABLE_LOCALES } from "../../assets/locales/locale_config";
 
 export function RoomSettingsSidebar({
   showBackButton,
@@ -38,6 +39,20 @@ export function RoomSettingsSidebar({
 
   const entryMode = watch("entry_mode");
   const spawnAndMoveMedia = watch("member_permissions.spawn_and_move_media");
+
+
+  const availableLocales = [];
+  for (const locale in AVAILABLE_LOCALES) {
+    availableLocales.push({ value: locale, text: AVAILABLE_LOCALES[locale] });
+  }
+
+  const options = availableLocales.map(({ text, value }, i) => {
+    return (
+      <option key={`option_${i}`} value={value}>
+        {text}
+      </option>
+    );
+  });
 
   useEffect(
     () => {
@@ -168,6 +183,11 @@ export function RoomSettingsSidebar({
             />
             <div className={styles.permissionsGroup}>
               <ToggleInput
+                name="user_data.block_sketchfab"
+                label={<FormattedMessage id="user_data.block_sketchfab" defaultMessage="Block Sketchfab" />}
+                ref={register}
+              />
+              <ToggleInput
                 name="member_permissions.spawn_camera"
                 label={<FormattedMessage id="room-settings-sidebar.spawn-camera" defaultMessage="Create cameras" />}
                 ref={register}
@@ -201,6 +221,11 @@ export function RoomSettingsSidebar({
               ref={register}
             />
             <ToggleInput
+              name="user_data.allow_avatar_creation"
+              label={<FormattedMessage id="user_data.allow_avatar_creation" defaultMessage="Allow avatar creation" />}
+              ref={register}
+            />
+            <ToggleInput
               name="user_data.block_chat"
               label={<FormattedMessage id="user_data.block_chat" defaultMessage="Block chat" />}
               ref={register}
@@ -210,6 +235,15 @@ export function RoomSettingsSidebar({
               label={<FormattedMessage id="user_data.block_audio" defaultMessage="Block audio" />}
               ref={register}
             />
+
+            <select
+              name = "user_data.localisation"
+              label={<FormattedMessage id="user_data.localisation" defaultMessage="Localisation" />}
+              ref={register}
+            >
+              {options}
+            </select>
+
           </div>
         </InputField>
         <ApplyButton type="submit" />

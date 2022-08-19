@@ -963,8 +963,43 @@ class UIRoot extends Component {
     const micPresences = getMicrophonePresences();
     return userFromPresence(selectedUserId, presence, micPresences, this.props.sessionId);
   }
+/*
+  forceEnterCustom = async function() {
+
+    const canAudio = this.props.hub.user_data === null ? true : (this.props.hub.user_data.block_audio !== undefined && !this.props.hub.user_data.block_audio);
+
+    this.setState({ enterInVR, waitingOnAudio: true });
+
+    if(canAudio) {
+      const hasGrantedMic = (await grantedMicLabels()).length > 0;
+
+      if (hasGrantedMic) {
+        if (!this.mediaDevicesManager.isMicShared) {
+          await this.mediaDevicesManager.startLastUsedMicShare();
+        }
+        this.beginOrSkipAudioSetup();
+      } else {
+        this.onRequestMicPermission();
+        this.pushHistoryState("entry_step", "mic_grant");
+      }
+      this.setState({ waitingOnAudio: false });
+    } else {
+      this.setState({ waitingOnAudio: false });
+      this.onAudioReadyButton();
+    }
+
+  }
+*/
 
   render() {
+    //romamile
+/*
+    window.forceEnter = function() {
+      this.forceEnterCustom();
+    };
+*/
+    // romamilend
+
     const isGhost =
       configs.feature("enable_lobby_ghosts") && (this.state.watching || (this.state.hide || this.props.hide));
     const hide = this.state.hide || this.props.hide;
@@ -1122,6 +1157,8 @@ class UIRoot extends Component {
     const isAdmin = window.location.toString().includes("admin");
     const canChat = this.props.hub.user_data === null ? true : (this.props.hub.user_data.block_chat !== undefined && !this.props.hub.user_data.block_chat);
     const canAudio = this.props.hub.user_data === null ? true : (this.props.hub.user_data.block_audio !== undefined && !this.props.hub.user_data.block_audio);
+    //const canCreateAvatar = this.props.hub.user_data === null ? false : (this.props.hub.user_data.allow_avatar_creation !== undefined && this.props.hub.user_data.allow_avatar_creation);
+    const canSketchfab = this.props.hub.user_data === null ? false : (this.props.hub.user_data.block_sketchfab !== undefined && !this.props.hub.user_data.block_sketchfab);
 
 
     const moreMenu = [
@@ -1315,12 +1352,72 @@ class UIRoot extends Component {
     ];
 
 		// romamile
-			const cueUI = window.stgSys.renderCueUI();
+    // 1) Stage Manager
+		const cueUI = window.stgSys.renderCueUI();
+
+    // 2) Ready Player Me Avatar creation
+
+    // Change this to your custom subdomain
+    const iframeUrl = 'https://activereplica.readyplayer.me/'
+    let iFrameShowing = false;
+  
+    function receiveMessage(event) {
+      if (event.data.name == 'returnuser' || event.data.name == 'checkuser')
+        return;
+
+      // Get URL to avatar
+      const url = event.data
+      console.log(`Avatar URL: ${url}`)
+
+      if (typeof url === 'string' || url instanceof String) {
+        const store = window.APP.store;
+        //store.state.profile.avatarId = proxiedUrlFor(url);
+        store.update({profile: { avatarId: url } }, null, "profile");
+        AFRAME.scenes[0].emit("avatar_updated");
+      }
+     
+      iFrameShowing = false;
+      deleteIframe();
+    }
+    window.addEventListener('message', receiveMessage, false)
+  
+    function loadIframe() {
+      document.getElementById("containerRPM").style.display = "block";
+      let iframe = document.getElementById('iframe')
+    
+      if (!iframe) {
+        iframe = document.createElement('iframe')
+        document.querySelector('.container').appendChild(iframe)
+      }
+
+      iframe.id = 'iframeRPM'
+      iframe.src = iframeUrl
+      iframe.className = 'contentRPM'
+      iframe.allow = 'camera *; microphone *'
+    }
+  
+    function deleteIframe() {
+      document.getElementById("containerRPM").style.display = "none";
+      let myObj = document.getElementById("iframeRPM")
+      myObj.remove();
+    }
+  
+    window.handleRPM = function() {
+      if(iFrameShowing) {
+        iFrameShowing = false;
+        deleteIframe();
+      } else {
+        iFrameShowing = true;
+        loadIframe();
+      }
+    }
+
 	  // romamilend
 
     return (
       <MoreMenuContextProvider>
         <ReactAudioContext.Provider value={this.state.audioContext}>
+          <div class="container" id="containerRPM" style={{ "display":"none","pointerEvents": "auto", "userSelect": "none", "width":"40%", "height":"60%"}}></div>
           <div className={classNames(rootStyles)}>
 
               <div className="topLeftMenu">

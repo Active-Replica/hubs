@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { LoadingScreenLayout } from "../layout/LoadingScreenLayout";
 import { Spinner } from "../misc/Spinner";
 import { useRandomMessageTransition } from "./useRandomMessageTransition";
+
 export function LoadingScreen({ logoSrc, message, infoMessages }) {
   const infoMessage = useRandomMessageTransition(infoMessages);
   return (
@@ -16,7 +17,10 @@ export function LoadingScreen({ logoSrc, message, infoMessages }) {
       }
       bottom={
         <>
-          <h3>Powered by Active Replica</h3>
+          <div>
+            <img src="../../assets/logoAR.png" className="logoMore" style={{"width":"20px", "height": "20px", "position": "relative" , "float": "left", "marginRight": "5px", "marginTop": "-3px"}} />
+            <h3>Powered by Active Replica</h3>
+          </div>
         </>
       }
     />
