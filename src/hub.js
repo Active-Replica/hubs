@@ -1432,10 +1432,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 		if(window.APP !== undefined) {
 			//console.log("===========>")
 			//console.log(window.APP.hub.user_data)
-			if(window.APP.hub.user_data !== null) {
-				if(window.APP.hub.user_data.localisation !== undefined) {
-					console.log("localisation per room => " + window.APP.hub.user_data.localisation);
-					store.update({ preferences: { locale: window.APP.hub.user_data.localisation } });
+			if(window.APP.hub !== undefined) {
+				if(window.APP.hub.user_data !== null) {
+					if(window.APP.hub.user_data.localisation !== undefined) {
+						console.log("localisation per room => " + window.APP.hub.user_data.localisation);
+						store.update({ preferences: { locale: window.APP.hub.user_data.localisation } });
+					}
 				}
 			}
 			clearInterval(tmpInt);

@@ -372,6 +372,16 @@ export default class Store extends EventTarget {
 			console.log("send profile to iframe");
 			//const userData = JSON.parse(localStorage.getItem("___hubs_store")).profile;
 			const userData = newState.profile;
+      
+      // If avatarId doesn't start with "http", then it's a local hubs link
+      // so we need to translate it as a global link
+      //https://chatmirror.com/api/v1/avatars/jXzcM9I/avatar.gltf
+      let beg = "http";
+      if (newState.profile.avatarId.substring(0, beg.length) !== beg) {   
+        newState.profile.avatarId = location.hostname + "/api/v1/avatars/" + newState.profile.avatarId + "/avatar.gltf";
+        console.log("update avatarId to global => " + newState.profile.avatarId);
+      //https://chatmirror.com/api/v1/avatars/jXzcM9I/avatar.gltf
+      }
 			console.log(userData);
 			let mess = {name:"updateuser", info:userData}
 			let rez = document.getElementById("iframeUser").contentWindow.postMessage(mess, '*');
