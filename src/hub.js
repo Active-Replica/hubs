@@ -1445,21 +1445,22 @@ document.addEventListener("DOMContentLoaded", async () => {
 	}, 100);
 
 	// Connexion between rooms handling
-/*	
   if (qs.has("av-name")) {
    store.update({ profile: { displayName: qs.get("av-name")} });
    store.state.activity.hasChangedName = true;
 	}
 
   if (qs.has("av-id")) {
-   //store.state.profile.avatarId = qs.get("av-id")
-   console.log("avatar => " + qs.get("av-id"));
-   //store.state.profile.avatarId = proxiedUrlFor("link...zeoif.glb");
+    //store.state.profile.avatarId = qs.get("av-id")
+    console.log("avatar => " + qs.get("av-id"));
+    //store.state.profile.avatarId = proxiedUrlFor("link...zeoif.glb");
+    //https://chatmirror.com/api/v1/avatars/jXzcM9I/avatar.gltf
+    store.update({ profile: { avatarId: qs.get("av-id")} });
 	}
-*/
 
 
   // Handling of avatar/name info over different servers with iFrame "like button"
+/*
   let userIframe = document.createElement('iframe')
   document.body.appendChild(userIframe);
   userIframe.id = 'iframeUser'
@@ -1467,8 +1468,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   userIframe.style="border: none"
   userIframe.width="0"
   userIframe.height="0"
-
-  console.log(userIframe);
+*/
+  //console.log(userIframe);
 /*
   window.checkA = () => {
     const userData = JSON.parse(localStorage.getItem("userInfo"));
@@ -1478,6 +1479,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   };
 */
   
+/*
   window.hasFirstCheckedAvatar = false;
 
   window.onmessage = (e) => {
@@ -1493,7 +1495,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           store.update({ profile: { avatarId: e.data.info.avatarId} });
 
             // 2) Force enter
-          window.forceEnter();
+          //window.forceEnter();
 
         }
         window.hasFirstCheckedAvatar = true;
@@ -1505,9 +1507,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   let tmpInt2 = setInterval(() => {
     let mess = {name:"getuser"}
+		let userIframe = document.getElementById("iframeUser");
     let rez = userIframe.contentWindow.postMessage(mess, '*');
 	}, 500);
-
+*/
 
   // window.APP["prox-react"] = {
   //   enabled: false,

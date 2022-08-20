@@ -66,7 +66,16 @@ AFRAME.registerComponent("open-media-button", {
         } else {
           await exitImmersive();
 					// Connecting to a non local hubs room
-          location.href = this.src+"?av-name="+window.APP.store.state.profile.displayName+"&av-id"+window.APP.store.state.profile.avatarId;
+          let myName = window.APP.store.state.profile.displayName
+          let myAvatar = window.APP.store.state.profile.avatarId;
+
+          let beg = "http";
+          if (myAvatar.substring(0, beg.length) !== beg) {   
+            myAvatar = "https://" + location.hostname + "/api/v1/avatars/" + myAvatar + "/avatar.gltf";
+          //https://chatmirror.com/api/v1/avatars/jXzcM9I/avatar.gltf
+          }
+
+          location.href = this.src + "?av-name=" + myName + "&av-id=" + myAvatar;
         }
       } else {
         await exitImmersive();

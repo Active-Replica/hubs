@@ -365,6 +365,7 @@ export default class Store extends EventTarget {
     const { valid } = validator.validate(finalState, SCHEMA);
 
 		//romamile
+    /*
 			// Sending info to widget
     if (newState.profile !== undefined
 		&& document.getElementById("iframeUser") !== null
@@ -377,8 +378,9 @@ export default class Store extends EventTarget {
       // so we need to translate it as a global link
       //https://chatmirror.com/api/v1/avatars/jXzcM9I/avatar.gltf
       let beg = "http";
+      console.log(newState.profile.avatarId.substring(0, beg.length));
       if (newState.profile.avatarId.substring(0, beg.length) !== beg) {   
-        newState.profile.avatarId = location.hostname + "/api/v1/avatars/" + newState.profile.avatarId + "/avatar.gltf";
+        newState.profile.avatarId = "https://" + location.hostname + "/api/v1/avatars/" + newState.profile.avatarId + "/avatar.gltf";
         console.log("update avatarId to global => " + newState.profile.avatarId);
       //https://chatmirror.com/api/v1/avatars/jXzcM9I/avatar.gltf
       }
@@ -386,6 +388,7 @@ export default class Store extends EventTarget {
 			let mess = {name:"updateuser", info:userData}
 			let rez = document.getElementById("iframeUser").contentWindow.postMessage(mess, '*');
 		}
+    */
 		//romamilend
 		
 
