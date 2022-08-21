@@ -816,7 +816,11 @@ class UIRoot extends Component {
 
   renderEntryStartPanel = () => {
     const { hasAcceptedProfile, hasChangedName } = this.props.store.state.activity;
-    const promptForNameAndAvatarBeforeEntry = this.props.hubIsBound ? !hasAcceptedProfile : !hasChangedName;
+		// romamile
+		const qs = new URLSearchParams(location.search);
+		let skipFromOtherStack = qs.has("av-id");
+		//romamilend
+    const promptForNameAndAvatarBeforeEntry = skipFromOtherStack ? true : ( this.props.hubIsBound ? !hasAcceptedProfile : !hasChangedName);
 
     // TODO: What does onEnteringCanceled do?
     return (

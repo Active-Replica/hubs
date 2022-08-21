@@ -74,8 +74,7 @@ AFRAME.registerComponent("open-media-button", {
             myAvatar = "https://" + location.hostname + "/api/v1/avatars/" + myAvatar + "/avatar.gltf";
           //https://chatmirror.com/api/v1/avatars/jXzcM9I/avatar.gltf
           }
-
-          location.href = this.src + "?av-name=" + myName + "&av-id=" + myAvatar;
+          location.href = this.src + "?av-name=" + myName + "&av-id=" + myAvatar + "&vr_entry_type=2d_now";
         }
       } else {
         await exitImmersive();
