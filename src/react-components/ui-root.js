@@ -610,6 +610,7 @@ class UIRoot extends Component {
   };
 
   beginOrSkipAudioSetup = () => {
+    window.uglyForAvatar = true;
     const skipAudioSetup = this.props.forcedVREntryType && this.props.forcedVREntryType.endsWith("_now");
     if (skipAudioSetup) {
       console.log(`Skipping audio setup (forcedVREntryType = ${this.props.forcedVREntryType})`);

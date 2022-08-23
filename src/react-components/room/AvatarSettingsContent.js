@@ -42,7 +42,7 @@ export function AvatarSettingsContent({
         </Button>
       </div>
       )}
-      {APP.hub.user_data !== null && APP.hub.user_data.allow_avatar_creation !== undefined && APP.hub.user_data.allow_avatar_creation && (
+      {window.uglyForAvatar !== undefined && window.uglyForAvatar && APP.hub.user_data !== null && APP.hub.user_data.allow_avatar_creation !== undefined && APP.hub.user_data.allow_avatar_creation && (
         <Button type="button" preset="basic" onClick={window.handleRPM}>
           <FormattedMessage id="avatar-settings-content.create-avatar-button" defaultMessage="Create Avatar" />
         </Button>
